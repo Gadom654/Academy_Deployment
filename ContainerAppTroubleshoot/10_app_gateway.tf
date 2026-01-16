@@ -25,6 +25,7 @@ resource "azurerm_application_gateway" "agw" {
 
   frontend_ip_configuration {
     name                 = "public-fe"
+    public_ip_address_id = azurerm_public_ip.agw_pip.id
   }
 
   backend_address_pool {
