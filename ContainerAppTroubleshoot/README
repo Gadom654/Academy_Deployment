@@ -2,3 +2,7 @@ Change 1
 Added ARC and target port 80 in ingress rule.
 Change 2
 Assign user role to container app user
+Change 3
+Added custom scale rule for cpu usage and registry and identity value for container app
+Change 4
+Added missing values

@@ -30,6 +30,7 @@ resource "azurerm_application_gateway" "agw" {
 
   backend_address_pool {
     name         = "aca-backend"
+    fqdns        = [azurerm_container_app.web.ingress[0].fqdn]
   }
 
   # Health probe hitting "/"
@@ -52,6 +53,7 @@ resource "azurerm_application_gateway" "agw" {
     protocol              = "Http"
     request_timeout       = 30
     probe_name            = "probe-http"
+    pick_host_name_from_backend_address = true
   }
 
   http_listener {
@@ -69,7 +71,20 @@ resource "azurerm_application_gateway" "agw" {
     backend_http_settings_name = "http-settings"
     priority                   = 100
   }
-
+  probe {
+    pick_host_name_from_backend_http_settings = true
+    name                                      = "http-probe"
+    protocol                                  = "Http"
+    path                                      = "/"
+    interval                                  = 30
+    timeout                                   = 10
+    unhealthy_threshold                       = 3
+    port                                      = 80
+    host                                      = azurerm_container_app.web.ingress[0].fqdn
+    match {
+      status_code = ["200-399"]
+    }
+  }
   waf_configuration {
     enabled          = true
     firewall_mode    = "Prevention"
@@ -79,4 +94,3 @@ resource "azurerm_application_gateway" "agw" {
 
   depends_on = [azurerm_container_app.web]
 }
-
