@@ -47,7 +47,7 @@ resource "azurerm_container_app" "web" {
       cpu    = 0.5
       memory = "1Gi"
 
-
+      
       liveness_probe {
         transport               = "HTTP"
         path                    = "/"
@@ -57,7 +57,9 @@ resource "azurerm_container_app" "web" {
         timeout                 = 5
         failure_count_threshold = 3
       }
+      
     }
+    min_replicas = 1
     custom_scale_rule {
       custom_rule_type = local.custom_rule_type
       metadata = {
@@ -69,7 +71,9 @@ resource "azurerm_container_app" "web" {
   }
 
   ingress {
+    client_certificate_mode = "ignore"
     allow_insecure_connections = true
+    external_enabled = true
     target_port = 80
     traffic_weight {
       latest_revision = true

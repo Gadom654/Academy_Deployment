@@ -19,6 +19,30 @@ resource "azurerm_network_security_group" "nsg_appgw" {
     source_address_prefix      = "*"
     destination_address_prefix = "VirtualNetwork" # lub "*" na labie
   }
+  # INBOUND: do Internet
+  security_rule {
+    name                       = "Allow-Internet-Inbound"
+    priority                   = 210
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["80"]
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "*"
+  }
+  #allow gateway manager
+  security_rule {
+  name                        = local.allow_gw_manager_inbound_rule_name
+  priority                    = local.allow_gw_manager_inbound_rule_priority
+  direction                   = local.allow_gw_manager_inbound_rule_direction
+  access                      = local.allow_gw_manager_inbound_rule_access
+  protocol                    = local.allow_gw_manager_inbound_rule_protocol
+  source_port_range           = local.allow_gw_manager_inbound_rule_source_port_range
+  destination_port_range      = local.allow_gw_manager_inbound_rule_destination_port_range
+  source_address_prefix       = local.allow_gw_manager_inbound_rule_source_address_prefix
+  destination_address_prefix  = local.allow_gw_manager_inbound_rule_destination_address_prefix
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "assoc_appgw" {
@@ -59,7 +83,7 @@ resource "azurerm_network_security_group" "nsg_aca" {
     source_port_range          = "*"
     destination_port_ranges    = ["80", "443"]
     source_address_prefix      = "*"
-    destination_address_prefix = "Internet"
+    destination_address_prefix = "*"
   }
 }
 

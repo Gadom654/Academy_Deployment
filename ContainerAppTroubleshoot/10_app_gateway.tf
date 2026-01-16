@@ -41,6 +41,8 @@ resource "azurerm_application_gateway" "agw" {
     interval            = 15
     timeout             = 5
     unhealthy_threshold = 2
+    pick_host_name_from_backend_http_settings = true
+    port                = 80
     match {
       status_code = ["200"]
     }
@@ -70,20 +72,6 @@ resource "azurerm_application_gateway" "agw" {
     backend_address_pool_name  = "aca-backend"
     backend_http_settings_name = "http-settings"
     priority                   = 100
-  }
-  probe {
-    pick_host_name_from_backend_http_settings = true
-    name                                      = "http-probe"
-    protocol                                  = "Http"
-    path                                      = "/"
-    interval                                  = 30
-    timeout                                   = 10
-    unhealthy_threshold                       = 3
-    port                                      = 80
-    host                                      = azurerm_container_app.web.ingress[0].fqdn
-    match {
-      status_code = ["200-399"]
-    }
   }
   waf_configuration {
     enabled          = true

@@ -5,4 +5,10 @@ Assign user role to container app user
 Change 3
 Added custom scale rule for cpu usage and registry and identity value for container app
 Change 4
-Added missing values
+Added missing values for agw
+Change 5
+Added SG Rule for gateway manager
+Change 6
+adding private dns zone
+Change 7
+dodanie SGR dla połączenia z internetu do sieci app gateway
