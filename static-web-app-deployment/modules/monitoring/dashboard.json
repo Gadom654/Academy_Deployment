@@ -1,0 +1,116 @@
+{
+  "lenses": {
+    "0": {
+      "order": 0,
+      "parts": {
+        "0": {
+          "position": { "x": 0, "y": 0, "colSpan": 6, "rowSpan": 4 },
+          "metadata": {
+            "inputs": [
+              { "name": "options", "isOptional": true },
+              { "name": "sharedTimeRange", "isOptional": true }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "resourceMetadata": { "id": "${front_door_id}" },
+                        "name": "RequestCount",
+                        "aggregationType": 1,
+                        "namespace": "microsoft.cdn/profiles",
+                        "metricVisualization": { "displayName": "Request Count" }
+                      }
+                    ],
+                    "title": "Total Requests",
+                    "titleKind": 1,
+                    "visualization": { "chartType": 2 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "1": {
+          "position": { "x": 6, "y": 0, "colSpan": 6, "rowSpan": 4 },
+          "metadata": {
+            "inputs": [
+              { "name": "options", "isOptional": true },
+              { "name": "sharedTimeRange", "isOptional": true }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "resourceMetadata": { "id": "${front_door_id}" },
+                        "name": "Percentage4XX",
+                        "aggregationType": 4,
+                        "namespace": "microsoft.cdn/profiles"
+                      },
+                      {
+                        "resourceMetadata": { "id": "${front_door_id}" },
+                        "name": "Percentage5XX",
+                        "aggregationType": 4,
+                        "namespace": "microsoft.cdn/profiles"
+                      }
+                    ],
+                    "title": "4xx and 5xx Rates",
+                    "titleKind": 1,
+                    "visualization": { "chartType": 2 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "position": { "x": 0, "y": 4, "colSpan": 12, "rowSpan": 4 },
+          "metadata": {
+            "inputs": [
+              { "name": "options", "isOptional": true },
+              { "name": "sharedTimeRange", "isOptional": true }
+            ],
+            "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+            "settings": {
+              "content": {
+                "options": {
+                  "chart": {
+                    "metrics": [
+                      {
+                        "resourceMetadata": { "id": "${front_door_id}" },
+                        "name": "WebApplicationFirewallRequestCount",
+                        "aggregationType": 1,
+                        "namespace": "microsoft.cdn/profiles",
+                        "metricVisualization": { "displayName": "WAF Blocked Requests" }
+                      }
+                    ],
+                    "title": "WAF Blocked Requests",
+                    "visualization": { "chartType": 2 },
+                    "filterCollection": {
+                      "filters": [
+                        { "key": "Action", "operator": 0, "values": ["Block"] }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "model": {
+      "timeRange": {
+        "value": { "relative": { "duration": 24, "timeUnit": 1 } },
+        "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+      }
+    }
+  }
+}

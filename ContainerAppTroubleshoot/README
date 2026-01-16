@@ -1,0 +1,4 @@
+Change 1
+Added ARC and target port 80 in ingress rule.
+Change 2
+Assign user role to container app user
