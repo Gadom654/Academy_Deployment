@@ -35,7 +35,25 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containers.nginx.ports.containerPort }}
+
+        {{- if .Values.probes.liveness.enabled }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.containers.nginx.ports.containerPort }}
+          initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+        {{- end }}
         
+        {{- if .Values.probes.readiness.enabled }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.containers.nginx.ports.containerPort }}
+          initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+        {{- end }}
+
         # Resource Limits (From values.yaml)
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

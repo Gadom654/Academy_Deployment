@@ -1,18 +1,15 @@
 # Default values for nginx-chart.
 
+######################
+# Pods Configuration #
+######################
+
 replicaCount: 1
 
 image:
   repository: nginx
   pullPolicy: IfNotPresent
-  tag: "latest"
-
-service:
-  name: nginx-lb
-  type: LoadBalancer
-  port: 80
-  targetPort: 80
-  protocol: TCP
+  tag: "1.29.4"
 
 resources:
   requests:
@@ -21,11 +18,6 @@ resources:
   limits:
     cpu: 200m
     memory: 128Mi
-
-persistence:
-  enabled: true
-  size: 1Gi
-  accessMode: ReadWriteOnce
 
 initContainers:
   name: setup-httpd
@@ -42,6 +34,42 @@ checks:
   httpAuthFileCheck:
     name: HTTP_AUTH_FILE_CHECK
     key: .htpasswd
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+
+probes:
+  liveness:
+    enabled: true
+    initialDelaySeconds: 5  
+    periodSeconds: 10    
+    failureThreshold: 3   
+  readiness:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+
+#########################
+# Service Configuration #
+#########################
+service:
+  name: nginx-lb
+  type: LoadBalancer
+  port: 80
+  targetPort: 80
+  protocol: TCP
+
+#########################
+# Volumes Configuration #
+#########################
+persistence:
+  enabled: true
+  size: 1Gi
+  accessMode: ReadWriteOnce
 
 volumes:
   # Key: htmlSource (No hyphen at the start)
@@ -86,7 +114,7 @@ website:
   indexHtml: |
     <!DOCTYPE html>
     <html><body>
-    <h1>Hello from Helm!</h1>
+    <h1>Hello from Helm2!</h1>
     </body></html>
 
 nginxConfig:
