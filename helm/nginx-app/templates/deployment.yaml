@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      initContainers:
+      - name: {{ .Values.initContainers.name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command: {{ .Values.initContainers.command | toYaml | nindent 8 }}
+        args: {{ .Values.initContainers.commandArgs | toYaml | nindent 8 }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+        - name: {{ .Values.volumes.htmlSource.name }}
+          mountPath: {{ .Values.volumes.htmlSource.initMountPath }}
+        - name: {{ .Values.volumes.dataVolume.name }}
+          mountPath: {{ .Values.volumes.dataVolume.initMountPath }}
+
+      containers:
+      - name: {{ .Values.containers.nginx.name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.containers.nginx.ports.containerPort }}
+        
+        # Resource Limits (From values.yaml)
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        
+        env:
+          - name: {{ .Values.checks.httpAuthFileCheck.name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-auth
+                key: {{ .Values.checks.httpAuthFileCheck.key }}
+
+        volumeMounts:
+        - name: {{ .Values.volumes.dataVolume.name }}
+          mountPath: {{ .Values.volumes.dataVolume.mountPath }}
+        - name: {{ .Values.volumes.configVolume.name }}
+          mountPath: {{ .Values.volumes.configVolume.mountPath }}
+          subPath: {{ .Values.volumes.configVolume.subPath }}
+        - name: {{ .Values.volumes.authVolume.name }}
+          mountPath: {{ .Values.volumes.authVolume.mountPath }}
+          readOnly: {{ .Values.volumes.authVolume.isReadOnly }}
+
+      volumes:
+      - name: {{ .Values.volumes.dataVolume.name }}
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-pvc
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name: {{ .Values.volumes.htmlSource.name }}
+        configMap:
+          name: {{ .Release.Name }}-config
+      - name: {{ .Values.volumes.configVolume.name }}
+        configMap:
+          name: {{ .Release.Name }}-config
+      - name: {{ .Values.volumes.authVolume.name }}
+        secret:
+          secretName: {{ .Release.Name }}-auth
