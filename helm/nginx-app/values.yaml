@@ -148,3 +148,8 @@ ingress:
     - secretName: myapp-tls
       hosts:
         - myapp.example.com
+#######################
+# Istio Configuration #
+#######################
+istio:
+  enabled: true
