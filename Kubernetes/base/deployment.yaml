@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+      - name: setup-httpd
+        image: nginx:latest
+        command: ["/bin/sh", "-c"]
+        args: ['cp /tmp/config/index.html /tmp/data/index.html']
+        volumeMounts:
+        - name: html-source
+          mountPath: /tmp/config
+        - name: data-volume
+          mountPath: /tmp/data
+      
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        env:
+          - name: config_files
+            valueFrom:
+              secretKeyRef:
+                name: nginx-secret
+                key: .htpasswd
+                optional: false
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        volumeMounts:
+        # 1. Mount the custom config
+        - name: config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        # 2. Mount the secret for Auth
+        - name: auth-volume
+          mountPath: /etc/nginx/auth
+          readOnly: true
+        # 3. Mount the persistent storage
+        - name: data-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-source
+        configMap:
+          name: web-content
+        
+      - name: config-volume
+        configMap:
+          name: nginx-config
+      - name: auth-volume
+        secret:
+          secretName: nginx-secret
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: nginx-data-pvc
