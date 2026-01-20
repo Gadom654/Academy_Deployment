@@ -55,6 +55,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      id-token: write
     defaults:
       run:
         working-directory: ./paymentApp
@@ -99,6 +100,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      id-token: write
     defaults:
       run:
         working-directory: ./paymentApp
@@ -146,7 +148,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
