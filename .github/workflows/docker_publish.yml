@@ -1,0 +1,101 @@
+name: "Reusable Docker Build & Push"
+
+on:
+  workflow_call:
+    inputs:
+      # Project Configuration
+      image_name:
+        required: true
+        type: string
+        description: "Name of the image (e.g., payment-api)"
+      acr_name:
+        required: true
+        type: string
+        description: "Name of the Azure Container Registry"
+      working_directory:
+        required: false
+        type: string
+        default: "."
+        description: "Root of the application code"
+      dockerfile_path:
+        required: false
+        type: string
+        default: "Dockerfile"
+        description: "Path to Dockerfile relative to working_directory"
+      build_context:
+        required: false
+        type: string
+        default: "."
+        description: "Docker build context path"
+      environment:
+        required: false
+        type: string
+        default: "production"
+      arm_tenant_id:
+        required: true
+        type: string
+      arm_subscription_id:
+        required: true
+        type: string
+    secrets:
+      ARM_CLIENT_ID:
+        required: true
+        description: "Client ID for the Azure Login (OIDC)"
+
+permissions:
+  contents: read
+  id-token: write       
+  security-events: write 
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: get_version
+        run: |
+          VERSION=$(grep 'LABEL version=' ${{ inputs.dockerfile_path }} | cut -d'"' -f2)
+          echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Detected version: $VERSION"
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -f ${{ inputs.dockerfile_path }} \
+            -t ${{ inputs.image_name }}:${{ env.APP_VERSION }} \
+            ${{ inputs.build_context }}
+
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ inputs.image_name }}:${{ env.APP_VERSION }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL'
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ inputs.arm_tenant_id }}
+          subscription-id: ${{ inputs.arm_subscription_id }}
+
+      - name: Login to ACR
+        run: az acr login --name ${{ inputs.acr_name }}
+
+      - name: Push to Azure Container Registry
+        run: |
+          FULL_IMAGE_NAME="${{ inputs.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ env.APP_VERSION }}"
+          
+          docker tag ${{ inputs.image_name }}:${{ env.APP_VERSION }} $FULL_IMAGE_NAME
+          docker push $FULL_IMAGE_NAME
