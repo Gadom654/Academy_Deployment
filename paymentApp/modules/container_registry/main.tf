@@ -8,5 +8,4 @@ resource "azurerm_container_registry" "acr" {
   sku                      = local.container_registry_sku_standard
   admin_enabled            = local.container_registry_admin_enabled
   tags                     = var.tags
-  trust_policy_enabled     = local.isTrustPolicyEnabled
 }
