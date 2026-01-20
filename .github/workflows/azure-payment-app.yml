@@ -124,6 +124,7 @@ jobs:
   build-push_image:
     runs-on: ubuntu-latest
     environment: production
+    needs: apply
     defaults:
       run:
         working-directory: ./paymentApp
