@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   infra:
-    uses: gadom654/Academy_Deployment/.github/workflows/terraform-pipeline.yml@main
+    uses: Gadom654/Academy_Deployment/.github/workflows/terraform-pipeline.yml@main
     with:
       working_directory: "./paymentApp"
       arm_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
@@ -23,7 +23,7 @@ jobs:
       ARM_CLIENT_ID_APPLY: ${{ secrets.ARM_CLIENT_ID_APPLY }}
   docker:
     needs: infra  
-    uses: gadom654/Academy_Deployment/.github/workflows/docker-publish.yml@main
+    uses: Gadom654/Academy_Deployment/.github/workflows/docker-publish.yml@main
     with:
       image_name: "payment-api"
       acr_name: "paymentappacr"
@@ -37,7 +37,7 @@ jobs:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}  
   docker2:
     needs: infra  
-    uses: gadom654/Academy_Deployment/.github/workflows/docker-publish.yml@main
+    uses: Gadom654/Academy_Deployment/.github/workflows/docker-publish.yml@main
     with:
       image_name: "payment-worker"
       acr_name: "paymentappacr"
