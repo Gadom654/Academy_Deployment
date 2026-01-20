@@ -1,7 +1,7 @@
 ##################################
 ###     Container Registry     ###
 ################################## 
-resource "azurerm_container_registry" "ContainerRegistry" {
+resource "azurerm_container_registry" "acr" {
   name                     = local.container_registry_name
   resource_group_name      = var.resource_group_name
   location                 = var.location
