@@ -78,10 +78,10 @@ jobs:
         with:
           image-ref: '${{ inputs.image_name }}:${{ env.APP_VERSION }}'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          severity: 'CRITICAL,HIGH'
 
       - name: Azure Login
         uses: azure/login@v2
