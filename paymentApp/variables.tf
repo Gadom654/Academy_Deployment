@@ -15,10 +15,3 @@ variable "tags" {
   description = "A map of tags to assign to the resources."
   default     = {}
 }
-
-variable "github_access_token" {
-  type        = string
-  description = "The GitHub access token used to access private repositories."
-  default     = ""
-  sensitive   = true
-}

@@ -1,0 +1,5 @@
+/home/gadom/Academy_Deployment/paymentApp/code/k8s_payment_app_part_1_for_student/payment-worker/src/main/java/com/example/paymentworker/PaymentWorkerApplication.java
+/home/gadom/Academy_Deployment/paymentApp/code/k8s_payment_app_part_1_for_student/payment-worker/src/main/java/com/example/paymentworker/model/PaymentResponse.java
+/home/gadom/Academy_Deployment/paymentApp/code/k8s_payment_app_part_1_for_student/payment-worker/src/main/java/com/example/paymentworker/controller/WorkerController.java
+/home/gadom/Academy_Deployment/paymentApp/code/k8s_payment_app_part_1_for_student/payment-worker/src/main/java/com/example/paymentworker/service/PaymentWorkerService.java
+/home/gadom/Academy_Deployment/paymentApp/code/k8s_payment_app_part_1_for_student/payment-worker/src/main/java/com/example/paymentworker/model/WorkerProcessRequest.java
