@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Gadom654/Academy_Deployment
-    targetRevision: main
-    path: helm/nginx-app
+    repoURL: ghcr.io/gadom654
+    chart: nginx-chart
+    targetRevision: "*"
   destination:
     server: https://kubernetes.default.svc
     namespace: nginx-app      
