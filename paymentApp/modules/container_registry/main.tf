@@ -9,5 +9,4 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled            = local.container_registry_admin_enabled
   tags                     = var.tags
   trust_policy_enabled     = local.isTrustPolicyEnabled
-  retention_policy_in_days = local.retention_policy_in_days
 }
