@@ -12,7 +12,7 @@ permissions:
   security-events: write
 
 jobs:
-  deploy:
+  infra:
     uses: gadom654/Academy_Deployment/.github/workflows/terraform-pipeline.yml@main
     with:
       working_directory: "./paymentApp"
@@ -21,7 +21,6 @@ jobs:
       arm_client_id_plan: ${{ vars.ARM_CLIENT_ID_PLAN }}
     secrets:
       ARM_CLIENT_ID_APPLY: ${{ secrets.ARM_CLIENT_ID_APPLY }}
-      TF_VAR_GITHUB_ACCESS_TOKEN: ${{ secrets.TF_VAR_GITHUB_ACCESS_TOKEN }}
   docker:
     needs: infra  
     uses: gadom654/Academy_Deployment/.github/workflows/docker-publish.yml@main
