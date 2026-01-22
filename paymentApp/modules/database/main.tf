@@ -40,7 +40,7 @@ resource "azurerm_postgresql_flexible_server" "payment_db" {
 
   # Network injection
   delegated_subnet_id = var.subnet_id
-  private_dns_zone_id = azurerm_private_dns_zone.postgres_dns.id
+  private_dns_zone_id = azurerm_private_dns_zone.postgres_dns_zone.id
 
   administrator_login    = var.admin_username
   administrator_password = random_password.db_pass.result
@@ -54,7 +54,7 @@ resource "azurerm_postgresql_flexible_server" "payment_db" {
     standby_availability_zone = local.payment_db_ha_standby_az
   }
 
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres_link]
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres_dns_zone_link]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "app_db" {

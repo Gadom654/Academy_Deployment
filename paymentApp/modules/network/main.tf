@@ -68,8 +68,8 @@ resource "azurerm_nat_gateway_public_ip_association" "NATGatewayPublicIPAssociat
   nat_gateway_id       = azurerm_nat_gateway.PrivateSubnetsNATGateway.id
   public_ip_address_id = azurerm_public_ip.PrivateSubnetsNATPublicIP.id
 }
-resource "azurerm_subnet_nat_gateway_association" "PrivateSubnet2NATAssociation" {
-  subnet_id      = azurerm_subnet.PrivateSubnet2.id
+resource "azurerm_subnet_nat_gateway_association" "AKSNATAssociation" {
+  subnet_id      = azurerm_subnet.AKSSubnet.id
   nat_gateway_id = azurerm_nat_gateway.PrivateSubnetsNATGateway.id
 }
 
