@@ -35,8 +35,7 @@ resource "azurerm_application_gateway" "AppGateway1" {
   }
 
   backend_address_pool {
-    name  = local.backendAddressPoolName1
-    fqdns = [var.app_1_url]
+    name = local.backendAddressPoolName1
   }
 
   backend_http_settings {
@@ -67,7 +66,7 @@ resource "azurerm_application_gateway" "AppGateway1" {
   }
 
   firewall_policy_id = azurerm_web_application_firewall_policy.waf_policy.id
-  
+
   probe {
     pick_host_name_from_backend_http_settings = local.pickhostnamefrombackendhttpsettings
     name                                      = local.probeName1
@@ -90,7 +89,7 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
   name                = local.waf_policy_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags = var.tags
+  tags                = var.tags
 
   policy_settings {
     enabled                     = local.waf_policy_enabled

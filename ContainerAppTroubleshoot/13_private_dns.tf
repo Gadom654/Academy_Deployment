@@ -2,7 +2,7 @@
 ###      Private DNS Zones     ###
 ##################################
 resource "azurerm_private_dns_zone" "PrivateDNSZone" {
-  name                = replace(azurerm_container_app.web.ingress[0].fqdn,"${azurerm_container_app.web.name}.","")
+  name                = replace(azurerm_container_app.web.ingress[0].fqdn, "${azurerm_container_app.web.name}.", "")
   resource_group_name = azurerm_resource_group.rg.name
 }
 ##################################

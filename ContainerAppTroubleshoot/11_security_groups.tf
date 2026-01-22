@@ -15,7 +15,7 @@ resource "azurerm_network_security_group" "nsg_appgw" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges    = ["80"]           # lub ["443"] gdy backend HTTPS
+    destination_port_ranges    = ["80"] # lub ["443"] gdy backend HTTPS
     source_address_prefix      = "*"
     destination_address_prefix = "VirtualNetwork" # lub "*" na labie
   }
@@ -33,15 +33,15 @@ resource "azurerm_network_security_group" "nsg_appgw" {
   }
   #allow gateway manager
   security_rule {
-  name                        = local.allow_gw_manager_inbound_rule_name
-  priority                    = local.allow_gw_manager_inbound_rule_priority
-  direction                   = local.allow_gw_manager_inbound_rule_direction
-  access                      = local.allow_gw_manager_inbound_rule_access
-  protocol                    = local.allow_gw_manager_inbound_rule_protocol
-  source_port_range           = local.allow_gw_manager_inbound_rule_source_port_range
-  destination_port_range      = local.allow_gw_manager_inbound_rule_destination_port_range
-  source_address_prefix       = local.allow_gw_manager_inbound_rule_source_address_prefix
-  destination_address_prefix  = local.allow_gw_manager_inbound_rule_destination_address_prefix
+    name                       = local.allow_gw_manager_inbound_rule_name
+    priority                   = local.allow_gw_manager_inbound_rule_priority
+    direction                  = local.allow_gw_manager_inbound_rule_direction
+    access                     = local.allow_gw_manager_inbound_rule_access
+    protocol                   = local.allow_gw_manager_inbound_rule_protocol
+    source_port_range          = local.allow_gw_manager_inbound_rule_source_port_range
+    destination_port_range     = local.allow_gw_manager_inbound_rule_destination_port_range
+    source_address_prefix      = local.allow_gw_manager_inbound_rule_source_address_prefix
+    destination_address_prefix = local.allow_gw_manager_inbound_rule_destination_address_prefix
   }
 }
 

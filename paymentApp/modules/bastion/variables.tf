@@ -19,7 +19,7 @@ variable "resource_group_name" {
   description = "The name of the resource group in which to create the storage account."
 }
 
-variable "public_subnet_1_id" {
+variable "bastion_subnet_id" {
   type        = string
   description = "The ID of the public subnet to deploy the Application Gateway into."
 }

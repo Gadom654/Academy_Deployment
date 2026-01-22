@@ -29,32 +29,32 @@ resource "azurerm_application_gateway" "agw" {
   }
 
   backend_address_pool {
-    name         = "aca-backend"
-    fqdns        = [azurerm_container_app.web.ingress[0].fqdn]
+    name  = "aca-backend"
+    fqdns = [azurerm_container_app.web.ingress[0].fqdn]
   }
 
   # Health probe hitting "/"
   probe {
-    name                = "probe-http"
-    protocol            = "Http"
-    path                = "/"
-    interval            = 15
-    timeout             = 5
-    unhealthy_threshold = 2
+    name                                      = "probe-http"
+    protocol                                  = "Http"
+    path                                      = "/"
+    interval                                  = 15
+    timeout                                   = 5
+    unhealthy_threshold                       = 2
     pick_host_name_from_backend_http_settings = true
-    port                = 80
+    port                                      = 80
     match {
       status_code = ["200"]
     }
   }
 
   backend_http_settings {
-    name                  = "http-settings"
-    cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 30
-    probe_name            = "probe-http"
+    name                                = "http-settings"
+    cookie_based_affinity               = "Disabled"
+    port                                = 80
+    protocol                            = "Http"
+    request_timeout                     = 30
+    probe_name                          = "probe-http"
     pick_host_name_from_backend_address = true
   }
 

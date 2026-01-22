@@ -17,3 +17,90 @@ module "container_registry" {
   tags                = var.tags
   resource_group_name = local.resource_group_name
 }
+
+##################################
+### Security Module           ###
+##################################
+module "security" {
+  source              = "./modules/security"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+}
+
+##################################
+###  Network Module            ###
+##################################
+module "network" {
+  source              = "./modules/network"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+}
+
+##################################
+###  monitoring Module         ###
+##################################
+module "monitoring" {
+  source              = "./modules/monitoring"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+}
+
+##################################
+###  database Module            ###
+##################################
+module "database" {
+  source              = "./modules/database"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+  subnet_id           = module.monitoring.private_subnet_2_id
+  key_vault_id        = module.security.key_vault_id
+  vnet_id             = module.network.vnet_id
+  law_id              = module.monitoring.law_id
+}
+
+###############################
+###  bastion Module         ###
+###############################
+module "bastion" {
+  source              = "./modules/bastion"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+  bastion_subnet_id   = module.network.public_subnet_2_id
+}
+
+###########################
+###  AKS Module         ###
+###########################
+module "AKS" {
+  source              = "./modules/AKS"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+  aks_subnet_id       = module.network.private_subnet_1_id
+  law_id              = module.monitoring.law_id
+  gateway_id          = module.app_gateway.gateway_id
+  resource_group_id   = azurerm_resource_group.ContainerAppRG.id
+}
+
+##################################
+###  App Gateway Module        ###
+##################################
+module "app_gateway" {
+  source              = "./modules/app_gateway"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = local.resource_group_name
+  public_subnet_1_id  = module.network.public_subnet_1_id
+}

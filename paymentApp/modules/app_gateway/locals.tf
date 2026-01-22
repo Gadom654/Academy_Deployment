@@ -33,12 +33,12 @@ locals {
   probeName2                          = "appGatewayProbe2"
   matching_status_code                = ["200-399"]
   #WAF
-  waf_policy_name                     = "${var.prefix}-waf"
-  waf_policy_enabled                  = true
-  waf_policy_mode                     = "Prevention"
-  waf_policy_request_body_check       = true
+  waf_policy_name                        = "${var.prefix}-waf"
+  waf_policy_enabled                     = true
+  waf_policy_mode                        = "Prevention"
+  waf_policy_request_body_check          = true
   waf_policy_max_request_body_size_in_kb = 128
-  waf_policy_file_upload_limit_in_mb  = 100
-  waf_policy_managed_rule_set_type    = "OWASP"
-  waf_policy_managed_rule_set_version = "3.2"
+  waf_policy_file_upload_limit_in_mb     = 100
+  waf_policy_managed_rule_set_type       = "OWASP"
+  waf_policy_managed_rule_set_version    = "3.2"
 }

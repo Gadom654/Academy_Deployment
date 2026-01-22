@@ -20,18 +20,22 @@ variable "resource_group_name" {
 }
 
 variable "aks_subnet_id" {
-  type = string
+  type        = string
   description = "AKS subnet ID"
 }
 
 variable "law_id" {
-  
+  type        = string
+  description = "Law ID"
 }
 
+
 variable "gateway_id" {
-  
+  type        = string
+  description = "Gateway ID"
 }
 
 variable "resource_group_id" {
-  
+  type        = string
+  description = "Resource group ID"
 }

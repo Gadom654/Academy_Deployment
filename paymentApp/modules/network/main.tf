@@ -80,7 +80,7 @@ resource "azurerm_network_security_group" "nsg-app-gateway" {
   name                = local.nsg-app-gateway_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags = var.tags
+  tags                = var.tags
 
   security_rule {
     name                       = local.nsg-app-gateway_rule_1_name
@@ -89,7 +89,7 @@ resource "azurerm_network_security_group" "nsg-app-gateway" {
     access                     = local.nsg-app-gateway_rule_1_access
     protocol                   = local.nsg-app-gateway_rule_1_protocol
     source_port_range          = local.nsg-app-gateway_rule_1_source_port_range
-    destination_port_ranges     = local.nsg-app-gateway_rule_1_destination_port_range
+    destination_port_ranges    = local.nsg-app-gateway_rule_1_destination_port_range
     source_address_prefix      = local.nsg-app-gateway_rule_1_source_address_prefix
     destination_address_prefix = local.nsg-app-gateway_rule_1_destination_address_prefix
   }
@@ -117,7 +117,7 @@ resource "azurerm_network_security_group" "aks_nsg" {
   name                = local.nsg-aks-name
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags = var.tags
+  tags                = var.tags
 
   security_rule {
     name                       = local.nsg-aks-rule-1_name
@@ -126,7 +126,7 @@ resource "azurerm_network_security_group" "aks_nsg" {
     access                     = local.nsg-aks-rule-1_access
     protocol                   = local.nsg-aks-rule-1_protocol
     source_port_range          = local.nsg-aks-rule-1_source_port_range
-    destination_port_ranges     = local.nsg-aks-rule-1_destination_port_range
+    destination_port_ranges    = local.nsg-aks-rule-1_destination_port_range
     source_address_prefix      = local.nsg-aks-rule-1_source_address_prefix
     destination_address_prefix = local.nsg-aks-rule-1_destination_address_prefix
   }
@@ -141,7 +141,7 @@ resource "azurerm_network_security_group" "db_nsg" {
   name                = local.nsg-db-name
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags = var.tags
+  tags                = var.tags
 
   security_rule {
     name                       = local.nsg-db-name-rule-1_name
@@ -150,7 +150,7 @@ resource "azurerm_network_security_group" "db_nsg" {
     access                     = local.nsg-db-name-rule-1_access
     protocol                   = local.nsg-db-name-rule-1_protocol
     source_port_range          = local.nsg-db-name-rule-1_source_port_range
-    destination_port_ranges     = local.nsg-db-name-rule-1_destination_port_range
+    destination_port_ranges    = local.nsg-db-name-rule-1_destination_port_range
     source_address_prefix      = local.nsg-db-name-rule-1_source_address_prefix
     destination_address_prefix = local.nsg-db-name-rule-1_destination_address_prefix
   }
@@ -165,16 +165,16 @@ resource "azurerm_network_security_group" "bastion_nsg" {
   name                = local.nsg-bastion-name
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags = var.tags
+  tags                = var.tags
 
   security_rule {
     name                       = local.nsg-bastion-name-rule-1_name
     priority                   = local.nsg-bastion-name-rule-1_priority
     direction                  = local.nsg-bastion-name-rule-1_direction
     access                     = local.nsg-bastion-name-rule-1_access
-    protocol                   = local.nsg-bastion-name-rule-1_protocol   
+    protocol                   = local.nsg-bastion-name-rule-1_protocol
     source_port_range          = local.nsg-bastion-name-rule-1_source_port_range
-    destination_port_ranges     = local.nsg-bastion-name-rule-1_destination_port_range
+    destination_port_ranges    = local.nsg-bastion-name-rule-1_destination_port_range
     source_address_prefix      = local.nsg-bastion-name-rule-1_source_address_prefix
     destination_address_prefix = local.nsg-bastion-name-rule-1_destination_address_prefix
   }
@@ -198,7 +198,7 @@ resource "azurerm_network_security_group" "bastion_nsg" {
     access                     = local.nsg-bastion-name-rule-3_access
     protocol                   = local.nsg-bastion-name-rule-3_protocol
     source_port_range          = local.nsg-bastion-name-rule-3_source_port_range
-    destination_port_ranges     = local.nsg-bastion-name-rule-3_destination_port_range
+    destination_port_ranges    = local.nsg-bastion-name-rule-3_destination_port_range
     source_address_prefix      = local.nsg-bastion-name-rule-3_source_address_prefix
     destination_address_prefix = local.nsg-bastion-name-rule-3_destination_address_prefix
   }

@@ -19,7 +19,7 @@ resource "azurerm_storage_account" "log_storage_account" {
   name                     = local.log_storage_account_name
   resource_group_name      = var.resource_group_name
   location                 = var.location
-  tags = var.tags
+  tags                     = var.tags
   account_tier             = local.log_storage_account_tier
   account_replication_type = local.log_storage_account_replication_type
   min_tls_version          = local.log_storage_account_min_tls_version

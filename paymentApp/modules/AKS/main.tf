@@ -2,27 +2,27 @@
 ### AKS cluster  ###
 ####################
 resource "azurerm_kubernetes_cluster" "k8s" {
-  name                = local.k8s_cluster_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  dns_prefix          = var.prefix
-  kubernetes_version  = local.k8s_cluster_version
-  tags = var.tags
+  name                      = local.k8s_cluster_name
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  dns_prefix                = var.prefix
+  kubernetes_version        = local.k8s_cluster_version
+  tags                      = var.tags
   oidc_issuer_enabled       = local.k8s_cluster_oidc_issuer_enabled
   workload_identity_enabled = local.k8s_cluster_workload_identity_enabled
-  
+
   identity {
     type = local.k8s_cluster_identity_type
   }
 
   default_node_pool {
-    name                = local.k8s_cluster_default_node_pool_name
-    node_count          = local.k8s_cluster_default_node_node_count
-    vm_size             = local.k8s_cluster_default_node_vm_size
-    auto_scaling_enabled = local.k8s_cluster_default_node_auto_scaling_enabled
-    min_count           = local.k8s_cluster_default_node_min_count
-    max_count           = local.k8s_cluster_default_node_max_count
-    vnet_subnet_id      = var.aks_subnet_id
+    name                         = local.k8s_cluster_default_node_pool_name
+    node_count                   = local.k8s_cluster_default_node_node_count
+    vm_size                      = local.k8s_cluster_default_node_vm_size
+    auto_scaling_enabled         = local.k8s_cluster_default_node_auto_scaling_enabled
+    min_count                    = local.k8s_cluster_default_node_min_count
+    max_count                    = local.k8s_cluster_default_node_max_count
+    vnet_subnet_id               = var.aks_subnet_id
     only_critical_addons_enabled = local.k8s_cluster_default_node_only_critical_addons_enabled
   }
 
@@ -45,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   ingress_application_gateway {
     gateway_id = var.gateway_id
   }
-  
+
   key_vault_secrets_provider {
     secret_rotation_enabled = local.k8s_cluster_key_vault_secrets_provider_secret_rotation_enabled
   }
@@ -71,11 +71,11 @@ resource "azurerm_user_assigned_identity" "karpenter" {
   name                = local.karpenter_uai_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags = var.tags
+  tags                = var.tags
 }
 
 resource "azurerm_role_assignment" "karpenter_network" {
-  scope                = var.resource_group_id 
+  scope                = var.resource_group_id
   role_definition_name = local.karpenter_network_role_definition_name
   principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
 }
