@@ -63,3 +63,20 @@ resource "azurerm_postgresql_flexible_server_database" "app_db" {
   charset   = local.app_db_charset
   collation = local.app_db_collation
 }
+#################
+# Database logs #
+#################
+resource "azurerm_monitor_diagnostic_setting" "db_diag" {
+  name                       = log.db_diag_name
+  target_resource_id         = azurerm_postgresql_flexible_server.payment_db.id
+  log_analytics_workspace_id = var.law_id
+
+  enabled_log {
+    category_group = "allLogs"
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+  }
+}

@@ -39,3 +39,8 @@ variable "key_vault_id" {
   description = "The ID of the Key Vault"
   type        = string
 }
+
+variable "law_id" {
+  description = "The ID of the LAW"
+  type        = string
+}
