@@ -1,0 +1,155 @@
+# Default values for nginx-chart.
+
+######################
+# Pods Configuration #
+######################
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "1.29.4"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+initContainers:
+  name: setup-httpd
+  command: ["/bin/sh", "-c"]
+  commandArgs: ['cp /tmp/config/index.html /tmp/data/index.html']
+
+containers:
+  nginx:
+    name: nginx
+    ports:
+      containerPort: 80
+
+checks:
+  httpAuthFileCheck:
+    name: HTTP_AUTH_FILE_CHECK
+    key: .htpasswd
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+
+probes:
+  liveness:
+    enabled: true
+    initialDelaySeconds: 5  
+    periodSeconds: 10    
+    failureThreshold: 3   
+  readiness:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+
+#########################
+# Service Configuration #
+#########################
+service:
+  name: nginx-lb
+  type: LoadBalancer
+  port: 80
+  targetPort: 80
+  protocol: TCP
+
+#########################
+# Volumes Configuration #
+#########################
+persistence:
+  enabled: true
+  size: 1Gi
+  accessMode: ReadWriteOnce
+
+volumes:
+  # Key: htmlSource (No hyphen at the start)
+  htmlSource:
+    name: html-source
+    initMountPath: /tmp/config
+    configMap:
+      name: web-content
+
+  # Key: dataVolume
+  dataVolume:
+    name: data-volume
+    mountPath: /usr/share/nginx/html
+    initMountPath: /tmp/data
+    persistentVolumeClaim:
+      claimName: nginx-data-pvc
+
+  # Key: configVolume
+  configVolume:
+    name: config-volume
+    mountPath: /etc/nginx/nginx.conf
+    subPath: nginx.conf
+    configMap:
+      name: nginxConfig
+
+  # Key: authVolume
+  authVolume:
+    name: auth-volume
+    mountPath: /etc/nginx/auth
+    readOnly: true
+    secret:
+      secretName: nginx-secret
+
+
+#############################
+# Application Configuration #
+#############################
+auth:
+  htpasswd: "myuser:$apr1$TT45Jk0H$Kr58cbKgspL1pkYIO7F2S/"
+
+website:
+  indexHtml: |
+    <!DOCTYPE html>
+    <html><body>
+    <h1>Hello from Helm2!</h1>
+    </body></html>
+
+nginxConfig:
+  conf: |
+    events { worker_connections 1024; }
+    http {
+        server {
+            listen 80;
+            auth_basic "Restricted Access";
+            auth_basic_user_file /etc/nginx/auth/.htpasswd;
+            location / {
+                root /usr/share/nginx/html;
+                index index.html;
+            }
+        }
+    }
+#########################
+# Ingress Configuration #
+#########################
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: self-signed
+  hosts:
+    - host: myapp.example.com  
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: myapp-tls
+      hosts:
+        - myapp.example.com
+#######################
+# Istio Configuration #
+#######################
+istio:
+  enabled: true
