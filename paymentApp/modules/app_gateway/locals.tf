@@ -1,8 +1,9 @@
 locals {
+  #APPGateway
   AppGateway1PIPName                  = "${var.prefix}-appgw1-pip"
   AppGateway1Name                     = "${var.prefix}-appgw1"
-  AppGatewaySKUName                   = "Standard_v2"
-  AppGatewaySKUTier                   = "Standard_v2"
+  AppGatewaySKUName                   = "WAF_v2"
+  AppGatewaySKUTier                   = "WAF_v2"
   AppGatewaySKUCapacity               = 2
   gateway1_ip_configuration_name      = "appGatewayIpConfig1"
   frontendPortName1                   = "appGatewayFrontendPort1"
@@ -21,15 +22,6 @@ locals {
   routingRuleType                     = "Basic"
   IP_allocation_method                = "Static"
   routingRulePriority                 = 1
-  AppGateway2PIPName                  = "${var.prefix}-appgw2-pip"
-  AppGateway2Name                     = "${var.prefix}-appgw2"
-  gateway2_ip_configuration_name      = "appGatewayIpConfig2"
-  frontendPortName2                   = "appGatewayFrontendPort2"
-  frontendIPConfigName2               = "appGatewayFrontendIPConfig2"
-  backendAddressPoolName2             = "appGatewayBackendPool2"
-  backendHttpSettingsName2            = "appGatewayBackendHttpSettings2"
-  httpListenerName2                   = "appGatewayHttpListener2"
-  routingRuleName2                    = "appGatewayRoutingRule2"
   probeName1                          = "appGatewayProbe1"
   probeProtocol                       = "Http"
   probePath                           = "/health"
@@ -40,4 +32,13 @@ locals {
   pickhostnamefrombackendhttpsettings = true
   probeName2                          = "appGatewayProbe2"
   matching_status_code                = ["200-399"]
+  #WAF
+  waf_policy_name                     = "${var.prefix}-waf"
+  waf_policy_enabled                  = true
+  waf_policy_mode                     = "Prevention"
+  waf_policy_request_body_check       = true
+  waf_policy_max_request_body_size_in_kb = 128
+  waf_policy_file_upload_limit_in_mb  = 100
+  waf_policy_managed_rule_set_type    = "OWASP"
+  waf_policy_managed_rule_set_version = "3.2"
 }

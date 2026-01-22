@@ -28,6 +28,10 @@ variable "law_id" {
   
 }
 
-variable "app_gateway_subnet_id" {
+variable "gateway_id" {
+  
+}
+
+variable "resource_group_id" {
   
 }

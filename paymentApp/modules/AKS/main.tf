@@ -7,7 +7,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   resource_group_name = var.resource_group_name
   dns_prefix          = var.prefix
   kubernetes_version  = local.k8s_cluster_version
-
+  tags = var.tags
   oidc_issuer_enabled       = local.k8s_cluster_oidc_issuer_enabled
   workload_identity_enabled = local.k8s_cluster_workload_identity_enabled
   
@@ -34,13 +34,16 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     dns_service_ip    = local.k8s_cluster_default_network_profile_dns_service_ip
   }
 
+  workload_autoscaler_profile {
+    keda_enabled = local.k8s_cluster_workload_autoscaler_profile_keda_enabled
+  }
+
   oms_agent {
     log_analytics_workspace_id = var.law_id
   }
 
   ingress_application_gateway {
-    gateway_name = local.k8s_cluster_default_ingress_application_gateway_name
-    subnet_id    = var.app_gateway_subnet_id
+    gateway_id = var.gateway_id
   }
   
   key_vault_secrets_provider {
@@ -52,4 +55,48 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       default_node_pool[0].node_count
     ]
   }
+}
+########
+# Flux #
+########
+resource "azurerm_kubernetes_cluster_extension" "flux" {
+  name           = local.flux_name
+  cluster_id     = azurerm_kubernetes_cluster.k8s.id
+  extension_type = local.flux_extension_type
+}
+######################
+# Karpenter identity #
+######################
+resource "azurerm_user_assigned_identity" "karpenter" {
+  name                = local.karpenter_uai_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  tags = var.tags
+}
+
+resource "azurerm_role_assignment" "karpenter_network" {
+  scope                = var.resource_group_id 
+  role_definition_name = local.karpenter_network_role_definition_name
+  principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
+}
+
+resource "azurerm_role_assignment" "karpenter_vm_operator" {
+  scope                = var.resource_group_id
+  role_definition_name = local.karpenter_vm_operator_role_definition_name
+  principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
+}
+
+resource "azurerm_role_assignment" "karpenter_vm_contributor" {
+  scope                = var.resource_group_id
+  role_definition_name = local.karpenter_vm_contributor_role_definition_name
+  principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
+}
+
+resource "azurerm_federated_identity_credential" "karpenter" {
+  name                = local.karpenter_federated_identity_credential_name
+  resource_group_name = var.resource_group_name
+  parent_id           = azurerm_user_assigned_identity.karpenter.id
+  audience            = local.karpenter_federated_identity_credential_audience
+  issuer              = azurerm_kubernetes_cluster.k8s.oidc_issuer_url
+  subject             = local.karpenter_federated_identity_credential_subject
 }
