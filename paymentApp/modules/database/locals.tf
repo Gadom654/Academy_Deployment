@@ -15,4 +15,8 @@ locals {
   app_db_name                 = "${var.prefix}-app-db"
   app_db_charset              = "UTF8"
   app_db_collation            = "en_US.utf8"
+  db_diag_name                = "${var.prefix}-db-diag"
+  db_diag_category_group      = "allLogs"
+  db_diag_metric_category     = "allMetrics"
+  db_diag_metric_enabled      = true
 }

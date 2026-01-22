@@ -67,16 +67,16 @@ resource "azurerm_postgresql_flexible_server_database" "app_db" {
 # Database logs #
 #################
 resource "azurerm_monitor_diagnostic_setting" "db_diag" {
-  name                       = log.db_diag_name
+  name                       = local.db_diag_name
   target_resource_id         = azurerm_postgresql_flexible_server.payment_db.id
   log_analytics_workspace_id = var.law_id
 
   enabled_log {
-    category_group = "allLogs"
+    category_group = local.db_diag_category_group
   }
 
   metric {
-    category = "AllMetrics"
-    enabled  = true
+    category = local.db_diag_metric_category
+    enabled  = local.db_diag_metric_enabled
   }
 }
