@@ -15,14 +15,14 @@ resource "azurerm_virtual_network" "PaymentAppVNet" {
 resource "azurerm_subnet" "AKSSubnet" {
   name                            = local.private_subnet_1_name
   resource_group_name             = var.resource_group_name
-  virtual_network_name            = azurerm_virtual_network.ContainerAppVNet.name
+  virtual_network_name            = azurerm_virtual_network.PaymentAppVNet.name
   address_prefixes                = local.private_subnet_1_address_space
   default_outbound_access_enabled = local.private_subnets_outbound_access_enabled
 }
 resource "azurerm_subnet" "DBSubnet" {
   name                            = local.private_subnet_2_name
   resource_group_name             = var.resource_group_name
-  virtual_network_name            = azurerm_virtual_network.ContainerAppVNet.name
+  virtual_network_name            = azurerm_virtual_network.PaymentAppVNet.name
   address_prefixes                = local.private_subnet_2_address_space
   default_outbound_access_enabled = local.private_subnets_outbound_access_enabled
   delegation {
@@ -36,13 +36,13 @@ resource "azurerm_subnet" "DBSubnet" {
 resource "azurerm_subnet" "AppGatewaySubnet" {
   name                 = local.public_subnet_1_name
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.ContainerAppVNet.name
+  virtual_network_name = azurerm_virtual_network.PaymentAppVNet.name
   address_prefixes     = local.public_subnet_1_address_space
 }
 resource "azurerm_subnet" "BastionSubnet" {
   name                 = local.public_subnet_2_name
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.ContainerAppVNet.name
+  virtual_network_name = azurerm_virtual_network.PaymentAppVNet.name
   address_prefixes     = local.public_subnet_2_address_space
 }
 

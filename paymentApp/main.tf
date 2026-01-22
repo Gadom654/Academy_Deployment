@@ -60,7 +60,7 @@ module "database" {
   location            = var.location
   tags                = var.tags
   resource_group_name = local.resource_group_name
-  subnet_id           = module.monitoring.private_subnet_2_id
+  subnet_id           = module.network.private_subnet_2_id
   key_vault_id        = module.security.key_vault_id
   vnet_id             = module.network.vnet_id
   law_id              = module.monitoring.law_id

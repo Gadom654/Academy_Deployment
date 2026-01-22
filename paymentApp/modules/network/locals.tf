@@ -54,7 +54,7 @@ locals {
   nsg-aks-rule-1_protocol                            = "Tcp"
   nsg-aks-rule-1_source_port_range                   = "*"
   nsg-aks-rule-1_destination_port_range              = ["80", "443"]
-  nsg-aks-rule-1_source_address_prefix               = local.public_subnet_1_address_space
+  nsg-aks-rule-1_source_address_prefix               = local.public_subnet_1_address_space[0]
   nsg-aks-rule-1_destination_address_prefix          = "*"
   nsg-db-name                                        = "db-nsg"
   nsg-db-name-rule-1_name                            = "AllowAKS_Postgres"
@@ -64,7 +64,7 @@ locals {
   nsg-db-name-rule-1_protocol                        = "Tcp"
   nsg-db-name-rule-1_source_port_range               = "*"
   nsg-db-name-rule-1_destination_port_range          = ["5432"]
-  nsg-db-name-rule-1_source_address_prefix           = local.private_subnet_1_address_space
+  nsg-db-name-rule-1_source_address_prefix           = local.private_subnet_1_address_space[0]
   nsg-db-name-rule-1_destination_address_prefix      = "*"
   nsg-bastion-name                                   = "bastion-nsg"
   nsg-bastion-name-rule-1_name                       = "AllowSshRdpOutbound"
