@@ -55,6 +55,10 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       default_node_pool[0].node_count
     ]
   }
+  monitor_metrics {
+    annotations_allowed = null 
+    labels_allowed      = null 
+  }
 }
 ########
 # Flux #
@@ -73,8 +77,8 @@ data "azurerm_user_assigned_identity" "karpenter" {
 }
 resource "azurerm_federated_identity_credential" "karpenter" {
   name                = local.karpenter_federated_identity_credential_name
-  resource_group_name = var.resource_group_name
-  parent_id           = data.azurerm_user_assigned_identity.karpenter.principal_id
+  resource_group_name = local.uai_group_name 
+  parent_id           = data.azurerm_user_assigned_identity.karpenter.id
   audience            = local.karpenter_federated_identity_credential_audience
   issuer              = azurerm_kubernetes_cluster.k8s.oidc_issuer_url
   subject             = local.karpenter_federated_identity_credential_subject

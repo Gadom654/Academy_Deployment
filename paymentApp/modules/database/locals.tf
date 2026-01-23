@@ -9,9 +9,7 @@ locals {
   payment_db_version          = "18"
   payment_db_storage_mb       = 32768
   payment_db_sku_name         = "B_Standard_B1ms"
-  payment_db_zone             = "1"
-  payment_db_ha_mode          = "ZoneRedundant"
-  payment_db_ha_standby_az    = "2"
+  payment_db_zone             = "3"
   app_db_name                 = "${var.prefix}-app-db"
   app_db_charset              = "UTF8"
   app_db_collation            = "en_US.utf8"

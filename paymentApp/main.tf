@@ -50,6 +50,7 @@ module "monitoring" {
   location            = var.location
   tags                = var.tags
   resource_group_name = azurerm_resource_group.ContainerAppRG.name
+  k8s_cluster_id      = module.AKS.k8s_cluster_id
 }
 
 ##################################

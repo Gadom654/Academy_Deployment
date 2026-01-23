@@ -37,6 +37,10 @@ resource "azurerm_postgresql_flexible_server" "payment_db" {
   location            = var.location
   tags                = var.tags
   version             = local.payment_db_version
+  
+  public_network_access_enabled = false
+
+  zone = local.payment_db_zone
 
   # Network injection
   delegated_subnet_id = var.subnet_id
@@ -47,12 +51,6 @@ resource "azurerm_postgresql_flexible_server" "payment_db" {
 
   storage_mb = local.payment_db_storage_mb
   sku_name   = local.payment_db_sku_name
-  zone       = local.payment_db_zone
-
-  high_availability {
-    mode                      = local.payment_db_ha_mode
-    standby_availability_zone = local.payment_db_ha_standby_az
-  }
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres_dns_zone_link]
 }
