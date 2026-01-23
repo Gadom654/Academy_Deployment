@@ -1,7 +1,7 @@
 locals {
   #K8s
   k8s_cluster_name                                               = "${var.prefix}-aks"
-  k8s_cluster_version                                            = "1.29"
+  k8s_cluster_version                                            = "1.34.0"
   k8s_cluster_oidc_issuer_enabled                                = true
   k8s_cluster_workload_identity_enabled                          = true
   k8s_cluster_identity_type                                      = "SystemAssigned"
@@ -23,11 +23,7 @@ locals {
   flux_name           = "${var.prefix}-flux"
   flux_extension_type = "microsoft.flux"
   #Karpenter
-  karpenter_uai_name                               = "${var.prefix}-karpenter-uai"
-  karpenter_network_role_definition_name           = "Network Contributor"
-  karpenter_vm_operator_role_definition_name       = "Managed Identity Operator"
-  karpenter_vm_contributor_role_definition_name    = "Virtual Machine Contributor"
-  karpenter_federated_identity_credential_name     = "${var.prefix}-karpenter-fic"
+  karpenter_federated_identity_credential_name     = "karpenter-fic"
   karpenter_federated_identity_credential_audience = ["api://AzureADTokenExchange"]
   karpenter_federated_identity_credential_subject  = "system:serviceaccount:karpenter:karpenter"
 }

@@ -64,38 +64,13 @@ resource "azurerm_kubernetes_cluster_extension" "flux" {
   cluster_id     = azurerm_kubernetes_cluster.k8s.id
   extension_type = local.flux_extension_type
 }
-######################
-# Karpenter identity #
-######################
-resource "azurerm_user_assigned_identity" "karpenter" {
-  name                = local.karpenter_uai_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags                = var.tags
-}
-
-resource "azurerm_role_assignment" "karpenter_network" {
-  scope                = var.resource_group_id
-  role_definition_name = local.karpenter_network_role_definition_name
-  principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
-}
-
-resource "azurerm_role_assignment" "karpenter_vm_operator" {
-  scope                = var.resource_group_id
-  role_definition_name = local.karpenter_vm_operator_role_definition_name
-  principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
-}
-
-resource "azurerm_role_assignment" "karpenter_vm_contributor" {
-  scope                = var.resource_group_id
-  role_definition_name = local.karpenter_vm_contributor_role_definition_name
-  principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
-}
-
+###################
+# Identity assign #
+###################
 resource "azurerm_federated_identity_credential" "karpenter" {
   name                = local.karpenter_federated_identity_credential_name
   resource_group_name = var.resource_group_name
-  parent_id           = azurerm_user_assigned_identity.karpenter.id
+  parent_id           = "87b86ddb-1b26-47de-8008-63825119804e"
   audience            = local.karpenter_federated_identity_credential_audience
   issuer              = azurerm_kubernetes_cluster.k8s.oidc_issuer_url
   subject             = local.karpenter_federated_identity_credential_subject

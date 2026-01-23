@@ -1,5 +1,5 @@
 locals {
-  postgres_dns_zone_name      = "${var.prefix}-postgres-dns-zone"
+  postgres_dns_zone_name      = "privatelink.postgres.database.azure.com"
   postgres_dns_zone_link_name = "${var.prefix}-postgres-dns-zone-link"
   db_pass_length              = 20
   db_pass_special             = true

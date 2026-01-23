@@ -26,6 +26,8 @@ spec:
           ports:
             - name: http
               containerPort: {{ $val.containerPort }}
+          resources:
+            {{- toYaml $val.resources | nindent 12 }}
           
           env:
             # --- Database Connection Info ---
@@ -46,15 +48,15 @@ spec:
                   key: db-password
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.containers.payment-api.ports.containerPort }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+              port: {{ $val.containerPort }}
+            initialDelaySeconds: {{ $val.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ $val.probes.liveness.periodSeconds }}
+            failureThreshold: {{ $val.probes.liveness.failureThreshold }}
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.containers.payment-api.ports.containerPort }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+              port: {{ $val.containerPort }}
+            initialDelaySeconds: {{ $val.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ $val.probes.readiness.periodSeconds }}
+            failureThreshold: {{ $val.probes.readiness.failureThreshold }}
 {{- end }}
 {{- end }}
