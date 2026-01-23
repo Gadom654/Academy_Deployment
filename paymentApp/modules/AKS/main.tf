@@ -67,10 +67,14 @@ resource "azurerm_kubernetes_cluster_extension" "flux" {
 ###################
 # Identity assign #
 ###################
+data "azurerm_user_assigned_identity" "karpenter" {
+  name                = local.karpenter_uai_name
+  resource_group_name = local.uai_group_name             
+}
 resource "azurerm_federated_identity_credential" "karpenter" {
   name                = local.karpenter_federated_identity_credential_name
   resource_group_name = var.resource_group_name
-  parent_id           = "87b86ddb-1b26-47de-8008-63825119804e"
+  parent_id           = data.azurerm_user_assigned_identity.karpenter.principal_id
   audience            = local.karpenter_federated_identity_credential_audience
   issuer              = azurerm_kubernetes_cluster.k8s.oidc_issuer_url
   subject             = local.karpenter_federated_identity_credential_subject

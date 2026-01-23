@@ -23,6 +23,8 @@ locals {
   flux_name           = "${var.prefix}-flux"
   flux_extension_type = "microsoft.flux"
   #Karpenter
+  uai_group_name                                   = "uai-group"
+  karpenter_uai_name                               = "karpenter-uai"
   karpenter_federated_identity_credential_name     = "karpenter-fic"
   karpenter_federated_identity_credential_audience = ["api://AzureADTokenExchange"]
   karpenter_federated_identity_credential_subject  = "system:serviceaccount:karpenter:karpenter"
