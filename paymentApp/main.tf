@@ -15,7 +15,7 @@ module "container_registry" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
 }
 
 ##################################
@@ -26,7 +26,8 @@ module "security" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
+  resource_group_id   = azurerm_resource_group.ContainerAppRG.id
 }
 
 ##################################
@@ -37,7 +38,7 @@ module "network" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
 }
 
 ##################################
@@ -48,7 +49,7 @@ module "monitoring" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
 }
 
 ##################################
@@ -59,7 +60,7 @@ module "database" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
   subnet_id           = module.network.private_subnet_2_id
   key_vault_id        = module.security.key_vault_id
   vnet_id             = module.network.vnet_id
@@ -74,7 +75,7 @@ module "bastion" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
   bastion_subnet_id   = module.network.public_subnet_2_id
 }
 
@@ -86,7 +87,7 @@ module "AKS" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
   aks_subnet_id       = module.network.private_subnet_1_id
   law_id              = module.monitoring.law_id
   gateway_id          = module.app_gateway.gateway_id
@@ -101,6 +102,6 @@ module "app_gateway" {
   prefix              = var.prefix
   location            = var.location
   tags                = var.tags
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
   public_subnet_1_id  = module.network.public_subnet_1_id
 }

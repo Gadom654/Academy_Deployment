@@ -1,0 +1,22 @@
+{{- range $key, $val := .Values.components }}
+{{- if and $val.enabled $val.autoscaling.enabled }}
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ $.Release.Name }}-{{ $val.name }}-keda
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+spec:
+  scaleTargetRef:
+    name: {{ $.Release.Name }}-{{ $val.name }}
+  minReplicaCount: {{ $val.autoscaling.minReplicas }}
+  maxReplicaCount: {{ $val.autoscaling.maxReplicas }}
+  triggers:
+    # Example: Scale on CPU
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: {{ $val.autoscaling.targetCPU | quote }}
+{{- end }}
+{{- end }}

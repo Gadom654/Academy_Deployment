@@ -1,45 +1,42 @@
 # Default values for nginx-chart.
-
+########################
+# Global Configuration #
+########################
+global:
+  env: "production"
 ######################
 # Pods Configuration #
 ######################
+components:
+  api:
+    name: "payment-api"
+    enabled: true
+    image:
+      repository: "paymentappacr.azurecr.io/payment-api"
+      tag: "1.0.0"
+    containerPort: 8080
+    servicePort: 8080
+    replicaCount: 2
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPU: 80
 
-replicaCount: 1
-
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  tag: "1.29.4"
-
-resources:
-  requests:
-    cpu: 100m
-    memory: 64Mi
-  limits:
-    cpu: 200m
-    memory: 128Mi
-
-initContainers:
-  name: setup-httpd
-  command: ["/bin/sh", "-c"]
-  commandArgs: ['cp /tmp/config/index.html /tmp/data/index.html']
-
-containers:
-  nginx:
-    name: nginx
-    ports:
-      containerPort: 80
-
-checks:
-  httpAuthFileCheck:
-    name: HTTP_AUTH_FILE_CHECK
-    key: .htpasswd
-
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 50
+  worker:
+    name: "payment-worker"
+    enabled: true
+    image:
+      repository: "paymentappacr.azurecr.io/payment-worker"
+      tag: "1.0.0"
+    containerPort: 8090
+    servicePort: 8090
+    replicaCount: 1
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPU: 80
 
 probes:
   liveness:
@@ -62,46 +59,6 @@ service:
   port: 80
   targetPort: 80
   protocol: TCP
-
-#########################
-# Volumes Configuration #
-#########################
-persistence:
-  enabled: true
-  size: 1Gi
-  accessMode: ReadWriteOnce
-
-volumes:
-  # Key: htmlSource (No hyphen at the start)
-  htmlSource:
-    name: html-source
-    initMountPath: /tmp/config
-    configMap:
-      name: web-content
-
-  # Key: dataVolume
-  dataVolume:
-    name: data-volume
-    mountPath: /usr/share/nginx/html
-    initMountPath: /tmp/data
-    persistentVolumeClaim:
-      claimName: nginx-data-pvc
-
-  # Key: configVolume
-  configVolume:
-    name: config-volume
-    mountPath: /etc/nginx/nginx.conf
-    subPath: nginx.conf
-    configMap:
-      name: nginxConfig
-
-  # Key: authVolume
-  authVolume:
-    name: auth-volume
-    mountPath: /etc/nginx/auth
-    readOnly: true
-    secret:
-      secretName: nginx-secret
 
 
 #############################
@@ -137,19 +94,18 @@ nginxConfig:
 ingress:
   enabled: true
   className: "nginx"
-  annotations:
-    cert-manager.io/cluster-issuer: self-signed
-  hosts:
-    - host: myapp.example.com  
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: myapp-tls
-      hosts:
-        - myapp.example.com
-#######################
-# Istio Configuration #
-#######################
-istio:
+  host: payment.paymentapp.com  
+############################
+# Postgresql Configuration #
+############################
+externalDB:
   enabled: true
+  host: "localhost"
+  port: 5432
+  internalName: "postgres-svc"
+########################
+# Secret Configuration #
+########################
+secrets:
+  dbUser: "pgadmin"
+  dbPassword: "password"

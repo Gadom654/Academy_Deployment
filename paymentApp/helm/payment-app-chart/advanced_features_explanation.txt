@@ -1,9 +1,0 @@
-Why Argo CD is beneficial for deploying applications
-It allows us to deploy new version of application as soon as it arives to repo and it keeps state of application in the same version as it is in repo.
-Why mTLS is valuable in Kubernetes clusters
-It secures network inside cluster so that connections between pods are encrypted.
-When Argo CD should NOT be used and why
-When you are not using Kubernetes or when you are using building scripts, it is only CD tool.
-When mTLS / Service Mesh should NOT be used and why
-It should be used when we need best possible performance or we have a lot of small containers like in IoT.
-Also we should not use it when we already have encryption builded inside application or we use UDP instead of TCP.

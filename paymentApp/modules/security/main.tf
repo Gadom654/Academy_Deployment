@@ -28,7 +28,7 @@ resource "azurerm_key_vault" "kv" {
 resource "azurerm_resource_group_policy_assignment" "allow-eu_only" {
   name                 = local.allow-eu_only_name
   location             = var.location
-  resource_group_id    = var.resource_group_name
+  resource_group_id    = var.resource_group_id
   policy_definition_id = local.allow-eu_only_policy_definition_id
 
   display_name = local.allow-eu_only_display_name

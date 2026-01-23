@@ -1,12 +1,17 @@
+{{- range $key, $val := .Values.components }}
+{{- if $val.enabled }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
+  name: {{ $.Release.Name }}-{{ $val.name }}
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   selector:
-    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
   ports:
-    - protocol: {{ .Values.service.protocol }}
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - protocol: TCP
+      port: {{ $val.servicePort }}
+      targetPort: {{ $val.containerPort }}
+{{- end }}
+{{- end }}
