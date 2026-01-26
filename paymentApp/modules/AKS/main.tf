@@ -62,7 +62,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "user-pool" {
-  name                  = "user_pool"
+  name                  = "userpool"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
   vm_size               = local.k8s_cluster_default_node_vm_size
   node_count            = 1
