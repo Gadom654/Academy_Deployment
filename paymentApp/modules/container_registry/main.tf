@@ -43,9 +43,7 @@ resource "azurerm_private_endpoint" "res-0" {
   private_service_connection {
     is_manual_connection              = false
     name                              = "paymentapp-aks-private"
-    private_connection_resource_alias = ""
     private_connection_resource_id    = azurerm_container_registry.acr.id
-    request_message                   = ""
     subresource_names                 = ["registry"]
   }
 }
