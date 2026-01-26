@@ -18,3 +18,13 @@ variable "resource_group_name" {
   type        = string
   description = "The name of the resource group in which to create the storage account."
 }
+
+variable "aks_subnet_id" {
+  type        = string
+  description = "AKS subnet ID"
+}
+
+variable "vnet_id" {
+  type        = string
+  description = "Vnet ID"
+}
