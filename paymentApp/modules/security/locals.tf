@@ -1,7 +1,7 @@
 locals {
   kv_name     = "${var.prefix}-kv"
   kv_sku_name = "standard"
-  applyID     = "0a2e9689-52c2-4e95-a001-5fef8290fa58"
+  applyID     = "1f07b8c9-4028-4856-bb87-c71b202ecacf"
 
   allow-eu_only_name                 = "${var.prefix}-allow-eu-only"
   allow-eu_only_policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c"
