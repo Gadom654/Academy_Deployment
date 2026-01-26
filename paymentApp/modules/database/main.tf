@@ -37,7 +37,7 @@ resource "azurerm_postgresql_flexible_server" "payment_db" {
   location            = var.location
   tags                = var.tags
   version             = local.payment_db_version
-  
+
   public_network_access_enabled = false
 
   zone = local.payment_db_zone

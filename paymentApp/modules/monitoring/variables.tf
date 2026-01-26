@@ -20,6 +20,6 @@ variable "resource_group_name" {
 }
 
 variable "k8s_cluster_id" {
-  type = string
+  type        = string
   description = "The ID of the Kubernetes cluster"
 }

@@ -31,7 +31,7 @@ resource "azurerm_monitor_workspace" "prometheus" {
   name                = local.prometheus_monitor_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags = var.tags
+  tags                = var.tags
 }
 
 # Link AKS to the Prometheus Workspace
@@ -45,7 +45,7 @@ resource "azurerm_monitor_data_collection_rule" "prometheus" {
   name                = local.data_collection_rule_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags = var.tags
+  tags                = var.tags
   kind                = local.data_collection_rule_kind
 
   destinations {
@@ -77,18 +77,11 @@ resource "azurerm_dashboard_grafana" "grafana" {
   api_key_enabled                   = true
   deterministic_outbound_ip_enabled = true
   public_network_access_enabled     = true
-  grafana_major_version = "11"
-  tags = var.tags
+  grafana_major_version             = "11"
+  tags                              = var.tags
 
   identity {
     type = "SystemAssigned"
   }
-}
-
-# Allow Grafana to read from Prometheus
-resource "azurerm_role_assignment" "grafana_monitoring_reader" {
-  scope                = azurerm_monitor_workspace.prometheus.id
-  role_definition_name = "Monitoring Data Reader"
-  principal_id         = azurerm_dashboard_grafana.grafana.identity[0].principal_id
 }
 
