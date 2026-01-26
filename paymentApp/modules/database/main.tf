@@ -28,6 +28,11 @@ resource "azurerm_key_vault_secret" "db_password" {
   value        = random_password.db_pass.result
   key_vault_id = var.key_vault_id
 }
+resource "azurerm_key_vault_secret" "db_username" {
+  name         = local.db_username
+  value        = var.admin_username
+  key_vault_id = var.key_vault_id
+}
 ################
 ### Database ###
 ################

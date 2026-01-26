@@ -5,6 +5,7 @@ locals {
   db_pass_special             = true
   db_pass_override_special    = "!#$%&*()-_=+[]{}<>:?"
   db_password_name            = "${var.prefix}-db-password"
+  db_username                 = "${var.prefix}-db-username"
   payment_db_server_name      = "${var.prefix}-payment-db"
   payment_db_version          = "18"
   payment_db_storage_mb       = 32768

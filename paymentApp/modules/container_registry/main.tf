@@ -13,7 +13,7 @@ resource "azurerm_container_registry" "acr" {
 # Private DNS Zone for acr #
 ############################
 resource "azurerm_private_dns_zone" "paymentapp-acrzone" {
-  name                = "privatelink.azurecr.io"
+  name = "privatelink.azurecr.io"
 
   resource_group_name = var.resource_group_name
   tags                = var.tags
@@ -41,9 +41,9 @@ resource "azurerm_private_endpoint" "res-0" {
     private_dns_zone_ids = [azurerm_private_dns_zone.paymentapp-acrzone.id]
   }
   private_service_connection {
-    is_manual_connection              = false
-    name                              = "paymentapp-aks-private"
-    private_connection_resource_id    = azurerm_container_registry.acr.id
-    subresource_names                 = ["registry"]
+    is_manual_connection           = false
+    name                           = "paymentapp-aks-private"
+    private_connection_resource_id = azurerm_container_registry.acr.id
+    subresource_names              = ["registry"]
   }
 }

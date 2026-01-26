@@ -47,6 +47,6 @@ spec:
           cidr: {{ $.Values.networkPolicy.externalDbCidr }}
       ports:
         - protocol: TCP
-          port: {{ $.Values.externalDB.port }} 
+          port: {{ $.Values.db.port }} 
 {{- end }}
 {{- end }}

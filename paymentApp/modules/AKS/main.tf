@@ -25,8 +25,8 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vnet_subnet_id               = var.aks_subnet_id
     only_critical_addons_enabled = local.k8s_cluster_default_node_only_critical_addons_enabled
     upgrade_settings {
-      drain_timeout_in_minutes = 0
-      max_surge = "10%"
+      drain_timeout_in_minutes      = 0
+      max_surge                     = "10%"
       node_soak_duration_in_minutes = 0
     }
   }
@@ -87,10 +87,10 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
 
   kustomizations {
     name = "main"
-    
-    path = "./paymentApp/flux/" 
-    
-    sync_interval_in_seconds = 300
+
+    path = "./paymentApp/flux/"
+
+    sync_interval_in_seconds  = 300
     retry_interval_in_seconds = 300
   }
 }
