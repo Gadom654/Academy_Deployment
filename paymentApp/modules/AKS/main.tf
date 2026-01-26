@@ -24,6 +24,11 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     max_count                    = local.k8s_cluster_default_node_max_count
     vnet_subnet_id               = var.aks_subnet_id
     only_critical_addons_enabled = local.k8s_cluster_default_node_only_critical_addons_enabled
+    upgrade_settings {
+      drain_timeout_in_minutes = 0
+      max_surge = "10%"
+      node_soak_duration_in_minutes = 0
+    }
   }
 
   network_profile {

@@ -13,7 +13,7 @@ resource "azurerm_container_registry" "acr" {
 # Private DNS Zone for acr #
 ############################
 resource "azurerm_private_dns_zone" "paymentapp-acrzone" {
-  name                = "paymentapp-acrzone"
+  name                = "privatelink.azurecr.io"
 
   resource_group_name = var.resource_group_name
   tags                = var.tags
