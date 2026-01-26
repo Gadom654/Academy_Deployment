@@ -14,6 +14,7 @@ components:
     image:
       repository: "paymentappacr.azurecr.io/payment-api"
       tag: "1.0.0"
+      pullPolicy: "IfNotPresent"
     containerPort: 8080
     servicePort: 8080
     replicaCount: 2
@@ -45,6 +46,7 @@ components:
     image:
       repository: "paymentappacr.azurecr.io/payment-worker"
       tag: "1.0.0"
+      pullPolicy: "IfNotPresent"
     containerPort: 8090
     servicePort: 8090
     replicaCount: 1
@@ -80,34 +82,6 @@ service:
   targetPort: 80
   protocol: TCP
 
-
-#############################
-# Application Configuration #
-#############################
-auth:
-  htpasswd: "myuser:$apr1$TT45Jk0H$Kr58cbKgspL1pkYIO7F2S/"
-
-website:
-  indexHtml: |
-    <!DOCTYPE html>
-    <html><body>
-    <h1>Hello from Helm2!</h1>
-    </body></html>
-
-nginxConfig:
-  conf: |
-    events { worker_connections 1024; }
-    http {
-        server {
-            listen 80;
-            auth_basic "Restricted Access";
-            auth_basic_user_file /etc/nginx/auth/.htpasswd;
-            location / {
-                root /usr/share/nginx/html;
-                index index.html;
-            }
-        }
-    }
 #########################
 # Ingress Configuration #
 #########################
@@ -118,11 +92,10 @@ ingress:
 ############################
 # Postgresql Configuration #
 ############################
-externalDB:
-  enabled: true
-  host: "localhost"
-  port: 5432
-  internalName: "postgres-svc"
+db:
+  host: "postgres-svc"
+  port: "5432"
+  name: "payment_db"
 ########################
 # Secret Configuration #
 ########################
@@ -135,3 +108,9 @@ secrets:
 networkPolicy:
   enabled: true
   externalDbCidr: "0.0.0.0/0"
+# Azure Configuration #
+azure:
+  enabled: true      
+  keyvaultName: "paymentapp-kv"
+  tenantId: "cda9a1f6-c3a2-40f6-a425-89316170fa38"
+  clientId: "0a2e9689-52c2-4e95-a001-5fef8290fa58"
