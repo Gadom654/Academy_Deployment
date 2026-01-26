@@ -1,0 +1,11 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: payment-app-repo
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  type: oci               
+  url: oci://paymentappacr.azurecr.io/helm
+  secretRef:
+    name: acr-credentials 

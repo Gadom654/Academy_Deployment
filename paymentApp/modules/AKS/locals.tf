@@ -22,6 +22,7 @@ locals {
   #Flux
   flux_name           = "${var.prefix}-flux"
   flux_extension_type = "microsoft.flux"
+  github_repo_url     = "https://github.com/gadom654/Academy_Deployment.git"
   #Karpenter
   uai_group_name                                   = "uai-group"
   karpenter_uai_name                               = "karpenter-uai"

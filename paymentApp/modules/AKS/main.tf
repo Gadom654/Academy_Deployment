@@ -69,6 +69,26 @@ resource "azurerm_kubernetes_cluster_extension" "flux" {
   cluster_id     = azurerm_kubernetes_cluster.k8s.id
   extension_type = local.flux_extension_type
 }
+resource "azurerm_kubernetes_flux_configuration" "payment_app" {
+  name       = "payment-app-config"
+  cluster_id = azurerm_kubernetes_cluster.k8s.id
+  namespace  = "flux-system"
+  scope      = "cluster"
+  git_repository {
+    url             = local.github_repo_url
+    reference_type  = "branch"
+    reference_value = "main"
+  }
+
+  kustomizations {
+    name = "main"
+    
+    path = "./Academy_Deployment/paymentApp/flux" 
+    
+    sync_interval_in_seconds = 300
+    retry_interval_in_seconds = 300
+  }
+}
 ###################
 # Identity assign #
 ###################
