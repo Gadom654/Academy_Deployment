@@ -88,7 +88,7 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
   kustomizations {
     name = "main"
     
-    path = "./Academy_Deployment/paymentApp/flux/" 
+    path = "./paymentApp/flux/" 
     
     sync_interval_in_seconds = 300
     retry_interval_in_seconds = 300
