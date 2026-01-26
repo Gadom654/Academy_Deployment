@@ -7,5 +7,3 @@ spec:
   interval: 5m0s
   type: oci               
   url: oci://paymentappacr.azurecr.io/helm
-  secretRef:
-    name: acr-credentials 
