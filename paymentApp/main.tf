@@ -16,7 +16,7 @@ module "container_registry" {
   location            = var.location
   tags                = var.tags
   resource_group_name = azurerm_resource_group.ContainerAppRG.name
-  aks_subnet_id       = module.AKS.aks_subnet_id
+  aks_subnet_id       = module.network.private_subnet_1_id
   vnet_id             = module.network.vnet_id
 }
 
