@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.externalDB.internalName }}
+  name: {{ .Values.db.name }}
 spec:
   type: ExternalName
-  externalName: {{ .Values.externalDB.host }}
+  externalName: {{ .Values.db.host }}
   ports:
-  - port: {{ .Values.externalDB.port }}
+  - port: {{ .Values.db.port }}
