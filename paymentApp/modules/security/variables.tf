@@ -24,7 +24,3 @@ variable "resource_group_id" {
   description = "The ID of the resource group in which to create the storage account."
 }
 
-variable "aks_identity_id" {
-  type        = string
-  description = "The ID of aks principal"
-}

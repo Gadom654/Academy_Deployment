@@ -3,6 +3,11 @@
 ####################
 data "azurerm_client_config" "current" {}
 
+data "azurerm_user_assigned_identity" "aks_identity" {
+  name                = "karpenter-uai"
+  resource_group_name = "uai-group"
+}
+
 resource "azurerm_key_vault" "kv" {
   name                        = local.kv_name
   location                    = var.location
@@ -46,7 +51,7 @@ resource "azurerm_key_vault_access_policy" "applyAccessPolicy" {
 resource "azurerm_key_vault_access_policy" "aksAccessPolicy" {
   key_vault_id = azurerm_key_vault.kv.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.aks_identity_id
+  object_id    = data.azurerm_user_assigned_identity.aks_identity.id
 
   key_permissions = [
     "Get",
