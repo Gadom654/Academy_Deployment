@@ -7,3 +7,5 @@ spec:
   interval: 5m0s
   type: oci               
   url: oci://paymentappacr.azurecr.io/
+  secretRef:
+    name: acr-credential
