@@ -17,6 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+        azure.workload.identity/use: "true"
     spec:
       containers:
         - name: {{ $val.name }}

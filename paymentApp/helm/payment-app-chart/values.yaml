@@ -108,3 +108,12 @@ azure:
   keyvaultName: "paymentapp-kv"
   tenantId: "cda9a1f6-c3a2-40f6-a425-89316170fa38"
   clientId: "87b86ddb-1b26-47de-8008-63825119804e"
+
+podLabels:
+  azure.workload.identity/use: "true"
+
+serviceAccount:
+  create: true   
+  name: "default" 
+  annotations:
+    azure.workload.identity/client-id: "87b86ddb-1b26-47de-8008-63825119804e"
