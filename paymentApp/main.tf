@@ -30,6 +30,7 @@ module "security" {
   tags                = var.tags
   resource_group_name = azurerm_resource_group.ContainerAppRG.name
   resource_group_id   = azurerm_resource_group.ContainerAppRG.id
+  aks_identity_id     = module.AKS.k8s_cluster_identity
 }
 
 ##################################

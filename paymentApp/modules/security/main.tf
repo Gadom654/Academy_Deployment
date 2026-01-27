@@ -42,6 +42,20 @@ resource "azurerm_key_vault_access_policy" "applyAccessPolicy" {
     "Get", "List", "Set", "Delete", "Purge", "Recover", "Backup", "Restore"
   ]
 }
+
+resource "azurerm_key_vault_access_policy" "aksAccessPolicy" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = var.aks_identity_id
+
+  key_permissions = [
+    "Get",
+  ]
+
+  secret_permissions = [
+    "Get",
+  ]
+}
 ################
 # Azure Policy #
 ################
