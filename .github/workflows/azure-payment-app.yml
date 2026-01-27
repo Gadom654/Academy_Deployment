@@ -52,7 +52,7 @@ jobs:
   k8s-setup:
     needs: infra 
     name: Update ACR Secret
-    uses: ./.github/workflows/templates/k8s_setup.yml
+    uses: Gadom654/Academy_Deployment/.github/workflows/templates/k8s_setup.yml
     with:
       cluster_name: "paymentapp-aks"
       resource_group: "paymentapp-rg" 
