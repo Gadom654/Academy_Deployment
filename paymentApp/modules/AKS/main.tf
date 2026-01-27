@@ -1,6 +1,10 @@
 ####################
 ### AKS cluster  ###
 ####################
+data "azurerm_user_assigned_identity" "aks_identity" {
+  name                = "karpenter-uai"    
+  resource_group_name = "uai-group"        
+}
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                      = local.k8s_cluster_name
   location                  = var.location
@@ -12,7 +16,8 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   workload_identity_enabled = local.k8s_cluster_workload_identity_enabled
 
   identity {
-    type = local.k8s_cluster_identity_type
+    type         = "UserAssigned"
+    identity_ids = [data.azurerm_user_assigned_identity.my_identity.id]
   }
 
   default_node_pool {

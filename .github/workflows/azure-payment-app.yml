@@ -68,7 +68,7 @@ jobs:
   build-and-push-chart:
     needs: infra
     name: Build & Push Helm Chart
-    uses: Gadom654/Academy_Deployment/.github/workflows/templates/helm-push.yml@main
+    uses: Gadom654/Academy_Deployment/.github/workflows/helm-push.yml@main
     with:
       chart_path: "./paymentApp/helm/payment-app-chart"
       acr_server: "paymentappacr.azurecr.io"
