@@ -102,15 +102,19 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
 ###################
 # Identity assign #
 ###################
-data "azurerm_user_assigned_identity" "karpenter" {
-  name                = local.karpenter_uai_name
-  resource_group_name = local.uai_group_name
-}
 resource "azurerm_federated_identity_credential" "karpenter" {
   name                = local.karpenter_federated_identity_credential_name
   resource_group_name = local.uai_group_name
-  parent_id           = data.azurerm_user_assigned_identity.karpenter.id
+  parent_id           = data.azurerm_user_assigned_identity.aks_identity.id
   audience            = local.karpenter_federated_identity_credential_audience
   issuer              = azurerm_kubernetes_cluster.k8s.oidc_issuer_url
   subject             = local.karpenter_federated_identity_credential_subject
+}
+resource "azurerm_federated_identity_credential" "app" {
+  name                = local.app_federated_identity_credential_name
+  resource_group_name = local.uai_group_name
+  parent_id           = data.azurerm_user_assigned_identity.aks_identity.id
+  audience            = local.karpenter_federated_identity_credential_audience
+  issuer              = azurerm_kubernetes_cluster.k8s.oidc_issuer_url
+  subject             = local.app_federated_identity_credential_subject
 }
