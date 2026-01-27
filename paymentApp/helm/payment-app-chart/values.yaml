@@ -107,4 +107,4 @@ azure:
   enabled: true      
   keyvaultName: "paymentapp-kv"
   tenantId: "cda9a1f6-c3a2-40f6-a425-89316170fa38"
-  clientId: "87da2783-6855-42fa-b9da-a8a031c43088"
+  clientId: "35b4a429-fcc0-4864-8618-d577a3f7da10"
