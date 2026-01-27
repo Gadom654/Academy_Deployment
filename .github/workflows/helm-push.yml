@@ -37,9 +37,6 @@ jobs:
   push:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    defaults:
-      run:
-        working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
