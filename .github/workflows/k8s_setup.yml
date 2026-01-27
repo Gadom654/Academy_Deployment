@@ -20,8 +20,18 @@ on:
         required: false
         default: "flux-system"
         type: string
+      environment:
+        required: false
+        type: string
+        default: "production"
+      arm_tenant_id:
+        required: true
+        type: string
+      arm_subscription_id:
+        required: true
+        type: string
     secrets:
-      azure_credentials:
+      ARM_CLIENT_ID:
         required: true
       acr_username:
         required: true
