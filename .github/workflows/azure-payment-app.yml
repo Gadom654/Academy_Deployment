@@ -48,5 +48,21 @@ jobs:
       arm_tenant_id: ${{ vars.ARM_TENANT_ID }}
       arm_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
     secrets:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}  
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}
+  k8s-setup:
+    needs: infra 
+    name: Update ACR Secret
+    uses: ./.github/workflows/templates/k8s_setup.yml
+    with:
+      cluster_name: "paymentapp-aks"
+      resource_group: "paymentapp-rg" 
+      acr_server: "paymentappacr.azurecr.io"
+      namespace: "flux-system"
+      environment: "production" 
+      arm_tenant_id: ${{ vars.ARM_TENANT_ID }}
+      arm_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}
+      acr_username: ${{ secrets.ACR_CLIENT_ID }}
+      acr_password: ${{ secrets.ACR_CLIENT_SECRET }}  
   

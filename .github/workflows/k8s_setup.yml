@@ -1,0 +1,58 @@
+name: "Template: Create ACR Secret"
+
+on:
+  workflow_call:
+    inputs:
+      cluster_name:
+        required: true
+        type: string
+      resource_group:
+        required: true
+        type: string
+      acr_server:
+        required: true
+        type: string
+      secret_name:
+        required: false
+        default: "acr-credential"
+        type: string
+      namespace:
+        required: false
+        default: "flux-system"
+        type: string
+    secrets:
+      azure_credentials:
+        required: true
+      acr_username:
+        required: true
+      acr_password:
+        required: true
+
+jobs:
+  create-secret:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ inputs.arm_tenant_id }}
+          subscription-id: ${{ inputs.arm_subscription_id }}
+
+      - name: Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource_group: ${{ inputs.resource_group }}
+          cluster_name: ${{ inputs.cluster_name }}
+
+      - name: Create K8s Secret
+        run: |
+          kubectl create secret docker-registry ${{ inputs.secret_name }} \
+            --docker-server=${{ inputs.acr_server }} \
+            --docker-username=${{ secrets.acr_username }} \
+            --docker-password=${{ secrets.acr_password }} \
+            --namespace=${{ inputs.namespace }} \
+            --dry-run=client -o yaml | kubectl apply -f -
+            
+          echo "✅ Secret '${{ inputs.secret_name }}' updated in namespace '${{ inputs.namespace }}'"
