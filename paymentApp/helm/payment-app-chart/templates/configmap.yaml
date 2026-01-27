@@ -4,6 +4,4 @@ metadata:
   name: payment-app-config
   namespace: {{ .Release.Namespace }}
 data:
-  DB_HOST: {{ .Values.db.host | quote }}
-  DB_PORT: {{ .Values.db.port | quote }}
-  DB_NAME: {{ .Values.db.name | quote }}
+  PAYMENT_DB_URL: {{ .Values.db.url | quote }}

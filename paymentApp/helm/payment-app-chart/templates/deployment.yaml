@@ -30,6 +30,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: payment-app-config
+            - secretRef:
+                name: payment-app-secrets
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
@@ -52,6 +54,6 @@ spec:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-            secretProviderClass: "azure-kv-payment-app"
+              secretProviderClass: "azure-kv-payment-app"
 {{- end }}
 {{- end }}

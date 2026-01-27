@@ -25,11 +25,11 @@ components:
       targetCPU: 80
     probes:
       liveness:
-        initialDelaySeconds: 5  
+        initialDelaySeconds: 60  
         periodSeconds: 10    
         failureThreshold: 3   
       readiness:
-        initialDelaySeconds: 5
+        initialDelaySeconds: 60
         periodSeconds: 10
         failureThreshold: 3
     resources:
@@ -87,21 +87,15 @@ service:
 #########################
 ingress:
   enabled: true
-  className: "nginx"
-  host: payment.paymentapp.com  
+  healthPath: "/actuator/health"
 ############################
 # Postgresql Configuration #
 ############################
 db:
-  host: "postgres-svc"
-  port: "5432"
-  name: "paymentdb"
-########################
-# Secret Configuration #
-########################
-secrets:
-  dbUser: "pgadmin"
-  dbPassword: "password"
+  url: "jdbc:postgresql://paymentapp-payment-db.postgres.database.azure.com:5432/paymentapp-app-db"
+  host: paymentapp-payment-db.postgres.database.azure.com
+  port: 5432
+  name: "paymentapp-payment-db"
 ###########################
 # NetPolicy Configuration #
 ###########################
