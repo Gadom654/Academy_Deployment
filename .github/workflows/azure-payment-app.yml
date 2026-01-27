@@ -64,5 +64,17 @@ jobs:
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}
       acr_username: ${{ secrets.ACR_CLIENT_ID }}
-      acr_password: ${{ secrets.ACR_CLIENT_SECRET }}  
+      acr_password: ${{ secrets.ACR_CLIENT_SECRET }}
+  build-and-push-chart:
+    needs: infra
+    name: Build & Push Helm Chart
+    uses: Gadom654/Academy_Deployment/.github/workflows/templates/helm-push.yml@main
+    with:
+      chart_path: "./paymentApp/helm/payment-app-chart"
+      acr_server: "paymentappacr.azurecr.io"
+      acr_name: "paymentappacr"     
+      arm_tenant_id: ${{ vars.ARM_TENANT_ID }}
+      arm_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}
   

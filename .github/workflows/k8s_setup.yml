@@ -53,8 +53,8 @@ jobs:
       - name: Set AKS Context
         uses: azure/aks-set-context@v3
         with:
-          resource_group: ${{ inputs.resource_group }}
-          cluster_name: ${{ inputs.cluster_name }}
+          resource-group: ${{ inputs.resource_group }}
+          cluster-name: ${{ inputs.cluster_name }}
 
       - name: Create K8s Secret
         run: |

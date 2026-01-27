@@ -1,0 +1,68 @@
+name: "Template: Helm Push"
+
+on:
+  workflow_call:
+    inputs:
+      chart_path:
+        required: true
+        description: "Path to the folder containing Chart.yaml"
+        type: string
+      acr_server:
+        required: true
+        type: string
+      environment:
+        required: false
+        type: string
+        default: "production"
+      arm_tenant_id:
+        required: true
+        type: string
+      arm_subscription_id:
+        required: true
+        type: string
+    secrets:
+      ARM_CLIENT_ID:
+        required: true
+        description: "Client ID for the Azure Login (OIDC)"
+
+permissions:
+  contents: read
+  id-token: write       
+  security-events: write 
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+          
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ inputs.arm_tenant_id }}
+          subscription-id: ${{ inputs.arm_subscription_id }}
+
+      - name: Login to ACR
+        run: az acr login --name ${{ inputs.acr_name }}
+
+      - name: Package Chart
+        run: |
+          helm package ${{ inputs.chart_path }} --destination .
+
+      - name: Push Chart to ACR
+        run: |
+          # Find the .tgz file we just created and push it
+          CHART_PACKAGE=$(ls *.tgz)
+          helm push $CHART_PACKAGE oci://${{ inputs.acr_server }}/
+          echo "✅ Pushed $CHART_PACKAGE to oci://${{ inputs.acr_server }}/"
