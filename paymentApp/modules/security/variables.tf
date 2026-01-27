@@ -25,6 +25,6 @@ variable "resource_group_id" {
 }
 
 variable "aks_identity_id" {
-  type = string
+  type        = string
   description = "The ID of aks principal"
 }
