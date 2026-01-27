@@ -10,6 +10,9 @@ on:
       acr_server:
         required: true
         type: string
+      acr_name:
+        required: true
+        type: string
       environment:
         required: false
         type: string
