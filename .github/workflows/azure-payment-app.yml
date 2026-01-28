@@ -86,6 +86,5 @@ jobs:
       working_directory: "./paymentApp"
       arm_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
       arm_tenant_id: ${{ vars.ARM_TENANT_ID }}
-      arm_client_id_plan: ${{ vars.ARM_CLIENT_ID_PLAN }}
     secrets:
       ARM_CLIENT_ID_APPLY: ${{ secrets.ARM_CLIENT_ID_APPLY }}
