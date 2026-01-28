@@ -95,7 +95,6 @@ module "AKS" {
   law_id                = module.monitoring.law_id
   gateway_id            = module.app_gateway.gateway_id
   resource_group_id     = azurerm_resource_group.ContainerAppRG.id
-  container_registry_id = module.container_registry.acr_id
 }
 
 ##################################

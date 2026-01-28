@@ -53,7 +53,7 @@ locals {
   nsg-aks-rule-1_access                              = "Allow"
   nsg-aks-rule-1_protocol                            = "Tcp"
   nsg-aks-rule-1_source_port_range                   = "*"
-  nsg-aks-rule-1_destination_port_range              = ["80", "443"]
+  nsg-aks-rule-1_destination_port_range              = ["8080"]
   nsg-aks-rule-1_source_address_prefix               = local.public_subnet_1_address_space[0]
   nsg-aks-rule-1_destination_address_prefix          = "*"
   nsg-db-name                                        = "db-nsg"

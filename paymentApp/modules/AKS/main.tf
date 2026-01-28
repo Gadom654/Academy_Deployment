@@ -14,9 +14,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   tags                      = var.tags
   oidc_issuer_enabled       = local.k8s_cluster_oidc_issuer_enabled
   workload_identity_enabled = local.k8s_cluster_workload_identity_enabled
-  bootstrap_profile {
-    container_registry_id = var.container_registry_id
-  }
   identity {
     type         = "UserAssigned"
     identity_ids = [data.azurerm_user_assigned_identity.aks_identity.id]
