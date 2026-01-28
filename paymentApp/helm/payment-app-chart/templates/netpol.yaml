@@ -30,7 +30,7 @@ spec:
             app.kubernetes.io/name: app-payment-app-payment-worker
       ports:
         - protocol: TCP
-          port: 8090
+          port: 8080
     {{- end }}
     
     {{- if eq $key "worker" }}
@@ -47,7 +47,7 @@ spec:
             app.kubernetes.io/name: app-payment-app-payment-api
       ports:
         - protocol: TCP
-          port: 8080
+          port: 8090
     {{- end }}
 
   egress:
