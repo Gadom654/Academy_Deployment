@@ -85,6 +85,7 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
   cluster_id = azurerm_kubernetes_cluster.k8s.id
   namespace  = "flux-system"
   scope      = "cluster"
+  depends_on = [ azurerm_kubernetes_cluster_extension.flux ]
   git_repository {
     url             = local.github_repo_url
     reference_type  = "branch"
