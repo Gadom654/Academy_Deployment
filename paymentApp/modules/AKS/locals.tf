@@ -30,5 +30,5 @@ locals {
   karpenter_federated_identity_credential_audience = ["api://AzureADTokenExchange"]
   karpenter_federated_identity_credential_subject  = "system:serviceaccount:karpenter:karpenter"
   app_federated_identity_credential_name           = "app-fic"
-  app_federated_identity_credential_subject       = "system:serviceaccount:app:default"
+  app_federated_identity_credential_subject        = "system:serviceaccount:app:default"
 }
