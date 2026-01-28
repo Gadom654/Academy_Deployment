@@ -7,7 +7,7 @@ locals {
   k8s_cluster_identity_type                                      = "SystemAssigned"
   k8s_cluster_default_node_pool_name                             = "default"
   k8s_cluster_default_node_node_count                            = 1
-  k8s_cluster_default_node_vm_size                               = "standard_b2ls_v2"
+  k8s_cluster_default_node_vm_size                               = "standard_B2as_v2"
   k8s_cluster_default_node_auto_scaling_enabled                  = false
   k8s_cluster_default_node_only_critical_addons_enabled          = false
   k8s_cluster_default_network_profile_network_plugin             = "azure"
