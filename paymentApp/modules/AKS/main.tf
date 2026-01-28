@@ -19,13 +19,15 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     identity_ids = [data.azurerm_user_assigned_identity.aks_identity.id]
   }
 
+  node_provisioning_profile {
+    mode = "Auto"
+    default_node_pools = "Auto"
+  }
   default_node_pool {
     name                         = local.k8s_cluster_default_node_pool_name
     node_count                   = local.k8s_cluster_default_node_node_count
     vm_size                      = local.k8s_cluster_default_node_vm_size
     auto_scaling_enabled         = local.k8s_cluster_default_node_auto_scaling_enabled
-    min_count                    = local.k8s_cluster_default_node_min_count
-    max_count                    = local.k8s_cluster_default_node_max_count
     vnet_subnet_id               = var.aks_subnet_id
     only_critical_addons_enabled = local.k8s_cluster_default_node_only_critical_addons_enabled
     upgrade_settings {
