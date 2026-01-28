@@ -17,20 +17,20 @@ components:
       pullPolicy: "IfNotPresent"
     containerPort: 8080
     servicePort: 8080
-    replicaCount: 2
+    replicaCount: 1
     autoscaling:
       enabled: true
-      minReplicas: 2
+      minReplicas: 1
       maxReplicas: 10
       targetCPU: 80
     probes:
       liveness:
         initialDelaySeconds: 60  
-        periodSeconds: 10    
+        periodSeconds: 30    
         failureThreshold: 3   
       readiness:
         initialDelaySeconds: 60
-        periodSeconds: 10
+        periodSeconds: 30
         failureThreshold: 3
     resources:
       requests:
@@ -57,12 +57,12 @@ components:
       targetCPU: 80
     probes:
       liveness:
-        initialDelaySeconds: 5  
-        periodSeconds: 10    
+        initialDelaySeconds: 60  
+        periodSeconds: 30    
         failureThreshold: 3   
       readiness:
-        initialDelaySeconds: 5
-        periodSeconds: 10
+        initialDelaySeconds: 60
+        periodSeconds: 30
         failureThreshold: 3
     resources:
       requests:
