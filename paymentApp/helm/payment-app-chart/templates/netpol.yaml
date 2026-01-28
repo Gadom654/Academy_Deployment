@@ -43,7 +43,13 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-
+    - to:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-api
+      ports:
+        - protocol: TCP
+          port: 8080
     - to:
       - ipBlock:
           cidr: {{ $.Values.networkPolicy.externalDbCidr }}
