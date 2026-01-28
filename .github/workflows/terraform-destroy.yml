@@ -8,26 +8,17 @@ on:
         type: string
         default: "."
         description: "Path to the Terraform code"
-      environment_plan:
+      environment:
         required: false
         type: string
         default: "plan"
         description: "GitHub Environment for Plan stage"
-      environment_apply:
-        required: false
-        type: string
-        default: "production"
-        description: "GitHub Environment for Apply stage"
       arm_subscription_id:
         required: true
         type: string
       arm_tenant_id:
         required: true
         type: string
-      arm_client_id_plan:
-        required: true
-        type: string
-        description: "Client ID for the Planer Principal"
     secrets:
       ARM_CLIENT_ID_APPLY:
         required: true
