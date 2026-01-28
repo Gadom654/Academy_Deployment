@@ -18,7 +18,9 @@ spec:
   ingress:
     {{- if eq $key "api" }}
     - from:
-      - namespaceSelector: {} 
+      - namespaceSelector: {}
+      - ipBlock:
+          cidr: "10.0.2.0/24"
       ports:
         - protocol: TCP
           port: {{ $val.containerPort }}
