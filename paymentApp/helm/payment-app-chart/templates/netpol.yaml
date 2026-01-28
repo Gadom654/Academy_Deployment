@@ -24,6 +24,13 @@ spec:
       ports:
         - protocol: TCP
           port: {{ $val.containerPort }}
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-worker
+      ports:
+        - protocol: TCP
+          port: 8090
     {{- end }}
     
     {{- if eq $key "worker" }}
@@ -34,6 +41,13 @@ spec:
       ports:
         - protocol: TCP
           port: {{ $val.containerPort }}
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-api
+      ports:
+        - protocol: TCP
+          port: 8080
     {{- end }}
 
   egress:
@@ -43,6 +57,13 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
+    - to:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-worker
+      ports:
+        - protocol: TCP
+          port: 8090
     - to:
       - podSelector:
           matchLabels:
