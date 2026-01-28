@@ -86,15 +86,15 @@ module "bastion" {
 ###  AKS Module         ###
 ###########################
 module "AKS" {
-  source                = "./modules/AKS"
-  prefix                = var.prefix
-  location              = var.location
-  tags                  = var.tags
-  resource_group_name   = azurerm_resource_group.ContainerAppRG.name
-  aks_subnet_id         = module.network.private_subnet_1_id
-  law_id                = module.monitoring.law_id
-  gateway_id            = module.app_gateway.gateway_id
-  resource_group_id     = azurerm_resource_group.ContainerAppRG.id
+  source              = "./modules/AKS"
+  prefix              = var.prefix
+  location            = var.location
+  tags                = var.tags
+  resource_group_name = azurerm_resource_group.ContainerAppRG.name
+  aks_subnet_id       = module.network.private_subnet_1_id
+  law_id              = module.monitoring.law_id
+  gateway_id          = module.app_gateway.gateway_id
+  resource_group_id   = azurerm_resource_group.ContainerAppRG.id
 }
 
 ##################################
