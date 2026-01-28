@@ -1,0 +1,70 @@
+name: "Therraform destroy CI/CD Pipeline"
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: false
+        type: string
+        default: "."
+        description: "Path to the Terraform code"
+      environment_plan:
+        required: false
+        type: string
+        default: "plan"
+        description: "GitHub Environment for Plan stage"
+      environment_apply:
+        required: false
+        type: string
+        default: "production"
+        description: "GitHub Environment for Apply stage"
+      arm_subscription_id:
+        required: true
+        type: string
+      arm_tenant_id:
+        required: true
+        type: string
+      arm_client_id_plan:
+        required: true
+        type: string
+        description: "Client ID for the Planer Principal"
+    secrets:
+      ARM_CLIENT_ID_APPLY:
+        required: true
+        description: "Client ID for the Applyer Principal"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy:
+    name: "Terraform Destroy"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    environment: ${{ inputs.environment }}
+    env:
+      ARM_CLIENT_ID: ${{ inputs.arm_client_id_plan }}
+      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+      ARM_USE_OIDC: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.ARM_CLIENT_ID }}
+          tenant-id: ${{ env.ARM_TENANT_ID }}
+          subscription-id: ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform destroy -auto-approve
