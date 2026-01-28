@@ -37,7 +37,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     environment: ${{ inputs.environment }}
     env:
-      ARM_CLIENT_ID: ${{ inputs.arm_client_id_plan }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}
       ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
       ARM_USE_OIDC: true
