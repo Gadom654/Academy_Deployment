@@ -5,4 +5,5 @@ locals {
   karpenter_vm_operator_role_definition_name    = "Managed Identity Operator"
   karpenter_vm_contributor_role_definition_name = "Virtual Machine Contributor"
   uai-group_name                                = "uai-group"
+  subscription_id                               = "/subscriptions/ad8dddbf-667c-4315-b894-36323592861e"
 }

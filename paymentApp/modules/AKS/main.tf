@@ -85,7 +85,7 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
   cluster_id = azurerm_kubernetes_cluster.k8s.id
   namespace  = "flux-system"
   scope      = "cluster"
-  depends_on = [ azurerm_kubernetes_cluster_extension.flux ]
+  depends_on = [ azurerm_kubernetes_flux_configuration.karpenter ]
   git_repository {
     url             = local.github_repo_url
     reference_type  = "branch"
@@ -96,6 +96,28 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
     name = "main"
 
     path = "./paymentApp/flux/"
+
+    sync_interval_in_seconds  = 300
+    retry_interval_in_seconds = 300
+  }
+}
+
+resource "azurerm_kubernetes_flux_configuration" "karpenter" {
+  name       = "karpenter-config"
+  cluster_id = azurerm_kubernetes_cluster.k8s.id
+  namespace  = "flux-system"
+  scope      = "cluster"
+  depends_on = [ azurerm_kubernetes_cluster_extension.flux ]
+  git_repository {
+    url             = local.github_repo_url
+    reference_type  = "branch"
+    reference_value = "main"
+  }
+
+  kustomizations {
+    name = "main"
+
+    path = "./paymentApp/fluxkarpenter/"
 
     sync_interval_in_seconds  = 300
     retry_interval_in_seconds = 300

@@ -5,9 +5,9 @@ locals {
   k8s_cluster_oidc_issuer_enabled                                = true
   k8s_cluster_workload_identity_enabled                          = true
   k8s_cluster_identity_type                                      = "SystemAssigned"
-  k8s_cluster_default_node_pool_name                             = "ec2as-pool"
-  k8s_cluster_default_node_node_count                            = 1
-  k8s_cluster_default_node_vm_size                               = "standard_EC2as_v5"
+  k8s_cluster_default_node_pool_name                             = "b2ls2"
+  k8s_cluster_default_node_node_count                            = 2
+  k8s_cluster_default_node_vm_size                               = "standard_B2ls_v2"
   k8s_cluster_default_node_auto_scaling_enabled                  = false
   k8s_cluster_default_node_only_critical_addons_enabled          = true
   k8s_cluster_default_network_profile_network_plugin             = "azure"

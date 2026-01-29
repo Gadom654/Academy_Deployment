@@ -1,0 +1,8 @@
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: default  
+spec:
+  imageFamily: Ubuntu2204
+  osDiskSizeGB: 128
+  vnetSubnetID: /subscriptions/ad8dddbf-667c-4315-b894-36323592861e/resourceGroups/paymentapp-rg/providers/Microsoft.Network/virtualNetworks/paymentapp-vnet/subnets/paymentapp-AKS-private-subnet

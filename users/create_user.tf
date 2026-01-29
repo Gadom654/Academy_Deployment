@@ -14,19 +14,19 @@ resource "azurerm_user_assigned_identity" "karpenter" {
 }
 
 resource "azurerm_role_assignment" "karpenter_network" {
-  scope                = azurerm_resource_group.identity_group.id
+  scope                = local.subscription_id
   role_definition_name = local.karpenter_network_role_definition_name
   principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
 }
 
 resource "azurerm_role_assignment" "karpenter_vm_operator" {
-  scope                = azurerm_resource_group.identity_group.id
+  scope                = local.subscription_id
   role_definition_name = local.karpenter_vm_operator_role_definition_name
   principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
 }
 
 resource "azurerm_role_assignment" "karpenter_vm_contributor" {
-  scope                = azurerm_resource_group.identity_group.id
+  scope                = local.subscription_id
   role_definition_name = local.karpenter_vm_contributor_role_definition_name
   principal_id         = azurerm_user_assigned_identity.karpenter.principal_id
 }

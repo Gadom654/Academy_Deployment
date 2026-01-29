@@ -1,15 +1,18 @@
-apiVersion: karpenter.sh/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: default
 spec:
   disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: Never
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 0s
   template:
     spec:
+      expireAfter: Never
       nodeClassRef:
         name: default
+        group: karpenter.azure.com
+        kind: AKSNodeClass
       requirements:
       - key: kubernetes.io/arch
         operator: In
