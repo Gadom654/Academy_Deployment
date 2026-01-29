@@ -21,7 +21,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
   node_provisioning_profile {
     mode = "Auto"
-    default_node_pools = "Auto"
+    default_node_pools = "None"
   }
   default_node_pool {
     name                         = local.k8s_cluster_default_node_pool_name
