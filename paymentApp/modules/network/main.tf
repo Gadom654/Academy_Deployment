@@ -269,6 +269,17 @@ resource "azurerm_network_security_group" "db_nsg2" {
     source_address_prefix      = local.nsg-db-name2-rule-2_source_address_prefix
     destination_address_prefix = local.nsg-db-name2-rule-2_destination_address_prefix
   }
+  security_rule {
+    name                       = local.nsg-db-name2-rule-3_name
+    priority                   = local.nsg-db-name2-rule-3_priority
+    direction                  = local.nsg-db-name2-rule-3_direction
+    access                     = local.nsg-db-name2-rule-3_access
+    protocol                   = local.nsg-db-name2-rule-3_protocol
+    source_port_range          = local.nsg-db-name2-rule-3_source_port_range
+    destination_port_ranges    = local.nsg-db-name2-rule-3_destination_port_range
+    source_address_prefix      = local.nsg-db-name2-rule-3_source_address_prefix
+    destination_address_prefix = local.nsg-db-name2-rule-3_destination_address_prefix
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "db_assoc2" {

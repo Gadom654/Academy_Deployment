@@ -152,8 +152,8 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
     echo '/dev/sdb1 /var/lib/postgresql/data_disk ext4 defaults,nofail 0 2' >> /etc/fstab
 
     # Configure Postgres to listen on all IPs
-    echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
-    echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/14/main/pg_hba.conf
+    echo "listen_addresses = '*'" >> /etc/postgresql/18/main/postgresql.conf
+    echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/18/main/pg_hba.conf
     
     # Restart Postgres
     systemctl restart postgresql
@@ -161,7 +161,7 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
     sleep 10
 
     sudo -u postgres psql -c "CREATE USER ${var.admin_username} WITH SUPERUSER ENCRYPTED PASSWORD '${random_password.db_pass.result}';"
-    sudo -u postgres psql -c "CREATE DATABASE paymentapp-app-db OWNER ${var.admin_username};"
+    sudo -u postgres psql -c "CREATE DATABASE \"paymentapp-app-db\" OWNER ${var.admin_username};"
 
     # --- PHASE 2: Backup Configuration ---
     
@@ -175,7 +175,7 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
     
     BACKUP_DIR="/var/backups/postgresql"
     TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-    DB_NAME="mytestdb"
+    DB_NAME="paymentapp-app-db"
     FILENAME="$BACKUP_DIR/db-backup-$DB_NAME-$TIMESTAMP.sql"
 
     # Run pg_dump as the 'postgres' user
