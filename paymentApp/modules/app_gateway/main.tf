@@ -19,6 +19,20 @@ resource "azurerm_application_gateway" "AppGateway1" {
     capacity = local.AppGatewaySKUCapacity
   }
 
+  lifecycle {
+    ignore_changes = [
+      tags,
+      backend_address_pool,
+      backend_http_settings,
+      http_listener,
+      request_routing_rule,
+      probe,
+      ssl_certificate,
+      redirect_configuration,
+      url_path_map,
+      rewrite_rule_set
+    ]
+  }
   gateway_ip_configuration {
     name      = local.gateway1_ip_configuration_name
     subnet_id = var.public_subnet_1_id

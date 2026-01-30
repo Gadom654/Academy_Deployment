@@ -106,7 +106,7 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
   resource_group_name   = var.resource_group_name
   location              = var.location
   tags                  = var.tags
-  size                  = "standard_B2ls_v2"
+  size                  = "Standard_B2ls_v2"
   admin_username        = "adminuser"
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
 
