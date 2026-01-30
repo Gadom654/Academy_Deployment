@@ -50,3 +50,8 @@ variable "public_key" {
   description = "Your SSH public key (~/.ssh/id_rsa.pub)"
   sensitive   = true
 }
+
+variable "subnet2_id" {
+  type        = string
+  description = "The ID of the 2nd DB subnet"
+}

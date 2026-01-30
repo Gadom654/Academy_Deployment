@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     identity_ids = [data.azurerm_user_assigned_identity.aks_identity.id]
   }
   bootstrap_profile {
-    artifact_source       = "Direct"
+    artifact_source       = "Cache"
     container_registry_id = var.container_registry_id
   }
   node_provisioning_profile {

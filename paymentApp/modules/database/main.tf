@@ -94,7 +94,7 @@ resource "azurerm_network_interface" "vm_nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = var.subnet_id
+    subnet_id                     = var.subnet2_id
     private_ip_address_allocation = "Dynamic"
   }
 }

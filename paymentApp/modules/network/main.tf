@@ -45,6 +45,13 @@ resource "azurerm_subnet" "BastionSubnet" {
   virtual_network_name = azurerm_virtual_network.PaymentAppVNet.name
   address_prefixes     = local.public_subnet_2_address_space
 }
+resource "azurerm_subnet" "DBSubnet2" {
+  name                            = local.private_subnet_3_name
+  resource_group_name             = var.resource_group_name
+  virtual_network_name            = azurerm_virtual_network.PaymentAppVNet.name
+  address_prefixes                = local.private_subnet_3_address_space
+  default_outbound_access_enabled = local.private_subnets_outbound_access_enabled
+}
 
 ##################################
 ###         NAT Gateway        ###
@@ -230,4 +237,38 @@ resource "azurerm_network_security_group" "bastion_nsg" {
 resource "azurerm_subnet_network_security_group_association" "bastion_assoc" {
   subnet_id                 = azurerm_subnet.BastionSubnet.id
   network_security_group_id = azurerm_network_security_group.bastion_nsg.id
+}
+resource "azurerm_network_security_group" "db_nsg2" {
+  name                = local.nsg-db-name2
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
+
+  security_rule {
+    name                       = local.nsg-db-name2-rule-1_name
+    priority                   = local.nsg-db-name2-rule-1_priority
+    direction                  = local.nsg-db-name2-rule-1_direction
+    access                     = local.nsg-db-name2-rule-1_access
+    protocol                   = local.nsg-db-name2-rule-1_protocol
+    source_port_range          = local.nsg-db-name2-rule-1_source_port_range
+    destination_port_ranges    = local.nsg-db-name2-rule-1_destination_port_range
+    source_address_prefix      = local.nsg-db-name2-rule-1_source_address_prefix
+    destination_address_prefix = local.nsg-db-name2-rule-1_destination_address_prefix
+  }
+  security_rule {
+    name                       = local.nsg-db-name2-rule-2_name
+    priority                   = local.nsg-db-name2-rule-2_priority
+    direction                  = local.nsg-db-name2-rule-2_direction
+    access                     = local.nsg-db-name2-rule-2_access
+    protocol                   = local.nsg-db-name2-rule-2_protocol
+    source_port_range          = local.nsg-db-name2-rule-2_source_port_range
+    destination_port_ranges    = local.nsg-db-name2-rule-2_destination_port_range
+    source_address_prefix      = local.nsg-db-name2-rule-2_source_address_prefix
+    destination_address_prefix = local.nsg-db-name2-rule-2_destination_address_prefix
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "db_assoc2" {
+  subnet_id                 = azurerm_subnet.DBSubnet2.id
+  network_security_group_id = azurerm_network_security_group.db_nsg2.id
 }
