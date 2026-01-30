@@ -145,11 +145,11 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
     apt-get install -y postgresql-18 postgresql-contrib-18
 
     # Partition and mount the data disk (LUN 0)
-    parted /dev/sdc --script mklabel gpt mkpart primary ext4 0% 100%
-    mkfs.ext4 /dev/sdc1
+    parted /dev/sdb --script mklabel gpt mkpart primary ext4 0% 100%
+    mkfs.ext4 /dev/sdb1
     mkdir -p /var/lib/postgresql/data_disk
-    mount /dev/sdc1 /var/lib/postgresql/data_disk
-    echo '/dev/sdc1 /var/lib/postgresql/data_disk ext4 defaults,nofail 0 2' >> /etc/fstab
+    mount /dev/sdb1 /var/lib/postgresql/data_disk
+    echo '/dev/sdb1 /var/lib/postgresql/data_disk ext4 defaults,nofail 0 2' >> /etc/fstab
 
     # Configure Postgres to listen on all IPs
     echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
