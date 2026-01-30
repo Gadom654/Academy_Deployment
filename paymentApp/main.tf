@@ -66,7 +66,6 @@ module "database" {
   resource_group_name = azurerm_resource_group.ContainerAppRG.name
   key_vault_id        = module.security.key_vault_id
   vnet_id             = module.network.vnet_id
-  law_id              = module.monitoring.law_id
   public_key          = var.public_key
   subnet2_id          = module.network.private_subnet_3_id
 }
