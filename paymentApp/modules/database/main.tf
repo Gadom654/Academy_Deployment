@@ -109,7 +109,7 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = var.public_key
   }
 
   os_disk {
@@ -147,7 +147,7 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
     sleep 10
 
     sudo -u postgres psql -c "CREATE USER ${var.admin_username} WITH SUPERUSER ENCRYPTED PASSWORD '${random_password.db_pass.result}';"
-    sudo -u postgres psql -c "CREATE DATABASE mytestdb OWNER ${var.admin_username};"
+    sudo -u postgres psql -c "CREATE DATABASE paymentapp-app-db OWNER ${var.admin_username};"
 
     # --- PHASE 2: Backup Configuration ---
     

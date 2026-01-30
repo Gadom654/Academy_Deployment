@@ -44,3 +44,9 @@ variable "law_id" {
   description = "The ID of the LAW"
   type        = string
 }
+
+variable "public_key" {
+  type        = string
+  description = "Your SSH public key (~/.ssh/id_rsa.pub)"
+  sensitive   = true
+}

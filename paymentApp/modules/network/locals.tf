@@ -66,6 +66,15 @@ locals {
   nsg-db-name-rule-1_destination_port_range          = ["5432"]
   nsg-db-name-rule-1_source_address_prefix           = local.private_subnet_1_address_space[0]
   nsg-db-name-rule-1_destination_address_prefix      = "*"
+  nsg-db-name-rule-2_name                            = "AllowBastionSSH"
+  nsg-db-name-rule-2_priority                        = 110
+  nsg-db-name-rule-2_direction                       = "Inbound"
+  nsg-db-name-rule-2_access                          = "Allow"
+  nsg-db-name-rule-2_protocol                        = "Tcp"
+  nsg-db-name-rule-2_source_port_range               = "*"
+  nsg-db-name-rule-2_destination_port_range          = ["22"]
+  nsg-db-name-rule-2_source_address_prefix           = local.public_subnet_2_address_space[0]
+  nsg-db-name-rule-2_destination_address_prefix      = "*"
   nsg-bastion-name                                   = "bastion-nsg"
   nsg-bastion-name-rule-1_name                       = "AllowSshRdpOutbound"
   nsg-bastion-name-rule-1_priority                   = 100

@@ -29,6 +29,9 @@ on:
         type: string
         description: "Client ID for the Planer Principal"
     secrets:
+      TF_VAR_public_key:
+        required: true
+        description: "pubkey to use twith bastion"
       ARM_CLIENT_ID_APPLY:
         required: true
         description: "Client ID for the Applyer Principal"
@@ -78,6 +81,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     environment: ${{ inputs.environment_plan }}
     env:
+      TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
       ARM_CLIENT_ID: ${{ inputs.arm_client_id_plan }}
       ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
@@ -118,6 +122,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     environment: ${{ inputs.environment_apply }}
     env:
+      TF_VAR_public_key: ${{ secrets.TF_VAR_public_key }}
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID_APPLY }}
       ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}

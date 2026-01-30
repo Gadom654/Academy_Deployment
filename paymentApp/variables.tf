@@ -15,3 +15,9 @@ variable "tags" {
   description = "A map of tags to assign to the resources."
   default     = {}
 }
+
+variable "public_key" {
+  type        = string
+  description = "Your SSH public key (~/.ssh/id_rsa.pub)"
+  sensitive   = true
+}
