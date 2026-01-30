@@ -129,8 +129,19 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
 
   custom_data = base64encode(<<-EOF
     #!/bin/bash
-    # Update and install Postgres
+    # 1. Update and install Postgres
     apt-get update
+    apt-get install -y curl gnupg2 lsb-release
+
+    # 2. Add the Official PostgreSQL Repository (PGDG)
+    # This repo contains ALL versions (14, 15, 16, 17, 18...)
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+    # 3. Update cache again so it sees the new versions
+    apt-get update
+
+    # 4. Now install PostgreSQL 18
     apt-get install -y postgresql-18 postgresql-contrib-18
 
     # Partition and mount the data disk (LUN 0)
