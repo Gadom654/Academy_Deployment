@@ -103,13 +103,4 @@ locals {
   nsg-db-name2-rule-2_destination_port_range         = ["22"]
   nsg-db-name2-rule-2_source_address_prefix          = local.public_subnet_2_address_space[0]
   nsg-db-name2-rule-2_destination_address_prefix     = "*"
-  nsg-db-name2-rule-3_name                           = "AllowPostgres"
-  nsg-db-name2-rule-3_priority                       = 120
-  nsg-db-name2-rule-3_direction                      = "Inbound"
-  nsg-db-name2-rule-3_access                         = "Allow"
-  nsg-db-name2-rule-3_protocol                       = "Tcp"
-  nsg-db-name2-rule-3_source_port_range              = "*"
-  nsg-db-name2-rule-3_destination_port_range         = ["5432"]
-  nsg-db-name2-rule-3_source_address_prefix          = local.private_subnet_2_address_space[0]
-  nsg-db-name2-rule-3_destination_address_prefix     = "*"
 }
