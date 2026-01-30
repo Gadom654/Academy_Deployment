@@ -19,20 +19,6 @@ resource "azurerm_subnet" "AKSSubnet" {
   address_prefixes                = local.private_subnet_1_address_space
   default_outbound_access_enabled = local.private_subnets_outbound_access_enabled
 }
-resource "azurerm_subnet" "DBSubnet" {
-  name                            = local.private_subnet_2_name
-  resource_group_name             = var.resource_group_name
-  virtual_network_name            = azurerm_virtual_network.PaymentAppVNet.name
-  address_prefixes                = local.private_subnet_2_address_space
-  default_outbound_access_enabled = local.private_subnets_outbound_access_enabled
-  delegation {
-    name = local.private_subnet_2_delegation_name
-    service_delegation {
-      name    = local.private_subnet_2_service_delegation
-      actions = [local.private_subnet_2_delegated_actions]
-    }
-  }
-}
 resource "azurerm_subnet" "AppGatewaySubnet" {
   name                 = local.public_subnet_1_name
   resource_group_name  = var.resource_group_name
@@ -145,41 +131,6 @@ resource "azurerm_network_security_group" "aks_nsg" {
 resource "azurerm_subnet_network_security_group_association" "aks_assoc" {
   subnet_id                 = azurerm_subnet.AKSSubnet.id
   network_security_group_id = azurerm_network_security_group.aks_nsg.id
-}
-
-resource "azurerm_network_security_group" "db_nsg" {
-  name                = local.nsg-db-name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  tags                = var.tags
-
-  security_rule {
-    name                       = local.nsg-db-name-rule-1_name
-    priority                   = local.nsg-db-name-rule-1_priority
-    direction                  = local.nsg-db-name-rule-1_direction
-    access                     = local.nsg-db-name-rule-1_access
-    protocol                   = local.nsg-db-name-rule-1_protocol
-    source_port_range          = local.nsg-db-name-rule-1_source_port_range
-    destination_port_ranges    = local.nsg-db-name-rule-1_destination_port_range
-    source_address_prefix      = local.nsg-db-name-rule-1_source_address_prefix
-    destination_address_prefix = local.nsg-db-name-rule-1_destination_address_prefix
-  }
-  security_rule {
-    name                       = local.nsg-db-name-rule-2_name
-    priority                   = local.nsg-db-name-rule-2_priority
-    direction                  = local.nsg-db-name-rule-2_direction
-    access                     = local.nsg-db-name-rule-2_access
-    protocol                   = local.nsg-db-name-rule-2_protocol
-    source_port_range          = local.nsg-db-name-rule-2_source_port_range
-    destination_port_ranges    = local.nsg-db-name-rule-2_destination_port_range
-    source_address_prefix      = local.nsg-db-name-rule-2_source_address_prefix
-    destination_address_prefix = local.nsg-db-name-rule-2_destination_address_prefix
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "db_assoc" {
-  subnet_id                 = azurerm_subnet.DBSubnet.id
-  network_security_group_id = azurerm_network_security_group.db_nsg.id
 }
 
 resource "azurerm_network_security_group" "bastion_nsg" {

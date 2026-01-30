@@ -1,9 +1,6 @@
 output "private_subnet_1_id" {
   value = azurerm_subnet.AKSSubnet.id
 }
-output "private_subnet_2_id" {
-  value = azurerm_subnet.DBSubnet.id
-}
 output "private_subnet_3_id" {
   value = azurerm_subnet.DBSubnet2.id
 }

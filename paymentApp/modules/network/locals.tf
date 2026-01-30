@@ -5,16 +5,11 @@ locals {
   #SUBNETS
   private_subnet_1_name                   = "${var.prefix}-AKS-private-subnet"
   private_subnet_1_address_space          = ["10.0.0.0/24"]
-  private_subnet_2_name                   = "${var.prefix}-DB-private-subnet"
-  private_subnet_2_address_space          = ["10.0.1.0/24"]
   public_subnet_1_name                    = "${var.prefix}-AppGateway-public-subnet"
   public_subnet_1_address_space           = ["10.0.2.0/24"]
   public_subnet_2_name                    = "AzureBastionSubnet"
   public_subnet_2_address_space           = ["10.0.3.0/24"]
   private_subnets_outbound_access_enabled = false
-  private_subnet_2_service_delegation     = "Microsoft.DBforPostgreSQL/flexibleServers"
-  private_subnet_2_delegated_actions      = "Microsoft.Network/virtualNetworks/subnets/join/action"
-  private_subnet_2_delegation_name        = "${var.prefix}-private-subnet-2-delegation"
   private_subnet_3_name                   = "${var.prefix}-DB-private-subnet-2"
   private_subnet_3_address_space          = ["10.0.4.0/24"]
   #NAT_GATEWAY
@@ -22,12 +17,6 @@ locals {
   nat_gateway_ip_name              = "${var.prefix}-nat-gateway-pip"
   nat_gateway_ip_allocation_method = "Static"
   nat_gateway_sku_standard         = "Standard"
-  #DNS_ZONE
-  dns_vnet_link_name1    = "${var.prefix}-dns-vnet-link1"
-  dns_vnet_link_name2    = "${var.prefix}-dns-vnet-link2"
-  isregistration_enabled = false
-  a_dns_record_name      = "*"
-  ttl_value              = 300
   #NSG
   nsg-app-gateway_name                               = "app-gateway-nsg"
   nsg-app-gateway_rule_1_name                        = "AllowHTTP_HTTPS"
@@ -58,25 +47,6 @@ locals {
   nsg-aks-rule-1_destination_port_range              = ["8080"]
   nsg-aks-rule-1_source_address_prefix               = local.public_subnet_1_address_space[0]
   nsg-aks-rule-1_destination_address_prefix          = "*"
-  nsg-db-name                                        = "db-nsg"
-  nsg-db-name-rule-1_name                            = "AllowAKS_Postgres"
-  nsg-db-name-rule-1_priority                        = 100
-  nsg-db-name-rule-1_direction                       = "Inbound"
-  nsg-db-name-rule-1_access                          = "Allow"
-  nsg-db-name-rule-1_protocol                        = "Tcp"
-  nsg-db-name-rule-1_source_port_range               = "*"
-  nsg-db-name-rule-1_destination_port_range          = ["5432"]
-  nsg-db-name-rule-1_source_address_prefix           = local.private_subnet_1_address_space[0]
-  nsg-db-name-rule-1_destination_address_prefix      = "*"
-  nsg-db-name-rule-2_name                            = "AllowBastionSSH"
-  nsg-db-name-rule-2_priority                        = 110
-  nsg-db-name-rule-2_direction                       = "Inbound"
-  nsg-db-name-rule-2_access                          = "Allow"
-  nsg-db-name-rule-2_protocol                        = "Tcp"
-  nsg-db-name-rule-2_source_port_range               = "*"
-  nsg-db-name-rule-2_destination_port_range          = ["22"]
-  nsg-db-name-rule-2_source_address_prefix           = local.public_subnet_2_address_space[0]
-  nsg-db-name-rule-2_destination_address_prefix      = "*"
   nsg-bastion-name                                   = "bastion-nsg"
   nsg-bastion-name-rule-1_name                       = "AllowSshRdpOutbound"
   nsg-bastion-name-rule-1_priority                   = 100
@@ -141,5 +111,5 @@ locals {
   nsg-db-name2-rule-3_source_port_range              = "*"
   nsg-db-name2-rule-3_destination_port_range         = ["5432"]
   nsg-db-name2-rule-3_source_address_prefix          = local.private_subnet_2_address_space[0]
-  nsg-db-name2-rule-3_destination_address_prefix    = "*"
+  nsg-db-name2-rule-3_destination_address_prefix     = "*"
 }

@@ -29,19 +29,8 @@ variable "vnet_id" {
   description = "The ID of the VNet to link the Private DNS Zone to"
   type        = string
 }
-
-variable "subnet_id" {
-  description = "The ID of the delegated DB subnet"
-  type        = string
-}
-
 variable "key_vault_id" {
   description = "The ID of the Key Vault"
-  type        = string
-}
-
-variable "law_id" {
-  description = "The ID of the LAW"
   type        = string
 }
 
