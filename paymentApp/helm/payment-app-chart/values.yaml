@@ -92,8 +92,8 @@ ingress:
 # Postgresql Configuration #
 ############################
 db:
-  url: "jdbc:postgresql://paymentapp-payment-db.postgres.database.azure.com:5432/paymentapp-app-db"
-  host: paymentapp-payment-db.postgres.database.azure.com
+  url: "jdbc:postgresql://10.0.4.4:5432/paymentapp-app-db"
+  host: 10.0.4.4
   port: 5432
   name: "paymentapp-payment-db"
 ###########################
