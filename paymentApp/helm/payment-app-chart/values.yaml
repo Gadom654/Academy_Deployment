@@ -101,7 +101,8 @@ db:
 ###########################
 networkPolicy:
   enabled: true
-  externalDbCidr: "0.0.0.0/0"
+  externalDbCidr: "10.0.1.0/24"
+  externalDbCidr2: "10.0.4.0/24"
 # Azure Configuration #
 azure:
   enabled: true      

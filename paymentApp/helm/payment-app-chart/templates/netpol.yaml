@@ -76,6 +76,12 @@ spec:
           cidr: {{ $.Values.networkPolicy.externalDbCidr }}
       ports:
         - protocol: TCP
+          port: {{ $.Values.db.port }}
+    - to:
+      - ipBlock:
+          cidr: {{ $.Values.networkPolicy.externalDbCidr2 }}
+      ports:
+        - protocol: TCP
           port: {{ $.Values.db.port }} 
 {{- end }}
 {{- end }}
