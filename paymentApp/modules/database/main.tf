@@ -146,8 +146,8 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
 
     sleep 10
 
-    sudo -u postgres psql -c "CREATE USER ${var.admin_username} WITH SUPERUSER ENCRYPTED PASSWORD '${var.db_password}';"
-    sudo -u postgres psql -c "CREATE DATABASE mytestdb OWNER ${random_password.db_pass.result};"
+    sudo -u postgres psql -c "CREATE USER ${var.admin_username} WITH SUPERUSER ENCRYPTED PASSWORD '${random_password.db_pass.result}';"
+    sudo -u postgres psql -c "CREATE DATABASE mytestdb OWNER ${var.admin_username};"
 
     # --- PHASE 2: Backup Configuration ---
     
