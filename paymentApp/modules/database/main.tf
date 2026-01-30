@@ -95,7 +95,10 @@ resource "azurerm_network_interface" "vm_nic" {
   ip_configuration {
     name                          = "internal"
     subnet_id                     = var.subnet2_id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address_version    = "IPv4"
+    primary                       = true
+    private_ip_address            = "10.0.4.4"
   }
 }
 resource "azurerm_linux_virtual_machine" "postgres_vm" {
@@ -128,7 +131,7 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
     #!/bin/bash
     # Update and install Postgres
     apt-get update
-    apt-get install -y postgresql-14 postgresql-contrib-14
+    apt-get install -y postgresql-18 postgresql-contrib-18
 
     # Partition and mount the data disk (LUN 0)
     parted /dev/sdc --script mklabel gpt mkpart primary ext4 0% 100%

@@ -79,7 +79,10 @@ resource "azurerm_subnet_nat_gateway_association" "AKSNATAssociation" {
   subnet_id      = azurerm_subnet.AKSSubnet.id
   nat_gateway_id = azurerm_nat_gateway.PrivateSubnetsNATGateway.id
 }
-
+resource "azurerm_subnet_nat_gateway_association" "DBNATAssociation" {
+  subnet_id      = azurerm_subnet.DBSubnet2.id
+  nat_gateway_id = azurerm_nat_gateway.PrivateSubnetsNATGateway.id
+}
 ##################################
 ###  Security Groups & Rules   ###
 ##################################
