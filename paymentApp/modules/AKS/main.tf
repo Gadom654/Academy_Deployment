@@ -20,7 +20,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
   bootstrap_profile {
     artifact_source       = "Direct"
-    container_registry_id = ""
   }
   node_provisioning_profile {
     mode = "Auto"
