@@ -39,3 +39,8 @@ variable "resource_group_id" {
   type        = string
   description = "Resource group ID"
 }
+
+variable "container_registry_id" {
+  type        = string
+  description = "Container registry ID"
+}

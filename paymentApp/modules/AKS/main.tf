@@ -20,9 +20,10 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
   bootstrap_profile {
     artifact_source       = "Direct"
+    container_registry_id = var.container_registry_id
   }
   node_provisioning_profile {
-    mode = "Auto"
+    mode               = "Auto"
     default_node_pools = "None"
   }
   default_node_pool {
@@ -87,7 +88,7 @@ resource "azurerm_kubernetes_flux_configuration" "payment_app" {
   cluster_id = azurerm_kubernetes_cluster.k8s.id
   namespace  = "flux-system"
   scope      = "cluster"
-  depends_on = [ azurerm_kubernetes_flux_configuration.karpenter ]
+  depends_on = [azurerm_kubernetes_flux_configuration.karpenter]
   git_repository {
     url             = local.github_repo_url
     reference_type  = "branch"
@@ -109,7 +110,7 @@ resource "azurerm_kubernetes_flux_configuration" "karpenter" {
   cluster_id = azurerm_kubernetes_cluster.k8s.id
   namespace  = "flux-system"
   scope      = "cluster"
-  depends_on = [ azurerm_kubernetes_cluster_extension.flux ]
+  depends_on = [azurerm_kubernetes_cluster_extension.flux]
   git_repository {
     url             = local.github_repo_url
     reference_type  = "branch"

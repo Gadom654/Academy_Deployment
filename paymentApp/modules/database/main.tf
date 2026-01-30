@@ -99,12 +99,12 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 resource "azurerm_linux_virtual_machine" "postgres_vm" {
-  name                = "vm-postgres-selfmanaged"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags                = var.tags
-  size                = "standard_B2ls_v2"
-  admin_username      = "adminuser"
+  name                  = "vm-postgres-selfmanaged"
+  resource_group_name   = var.resource_group_name
+  location              = var.location
+  tags                  = var.tags
+  size                  = "standard_B2ls_v2"
+  admin_username        = "adminuser"
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
 
   admin_ssh_key {
@@ -188,9 +188,9 @@ resource "azurerm_linux_virtual_machine" "postgres_vm" {
 
 resource "azurerm_managed_disk" "postgres_data" {
   name                 = "disk-postgres-data"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags                = var.tags
+  resource_group_name  = var.resource_group_name
+  location             = var.location
+  tags                 = var.tags
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = 10
