@@ -8,10 +8,6 @@ on:
         type: string
         default: "."
         description: "Path to the Terraform code"
-      aws_role:
-        required: true
-        type: string
-        default: "arn:aws:iam::<YOUR_ACCOUNT_ID>:role/github-actions-ecs-role"
       region:
         required: false
         type: string
@@ -21,6 +17,10 @@ on:
         type: string
         default: "AWS_APPLY"
         description: "GitHub Environment for Plan stage"
+    secrets:
+      aws_role:
+        required: true
+        description: "AWS Role ARN to assume"
 
 
 
@@ -38,7 +38,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     environment: ${{ inputs.environment }}
     env:
-      aws_role: ${{ inputs.aws_role }}
+      aws_role: ${{ secrets.aws_role }}
       region: ${{ inputs.region }}
     steps:
       - uses: actions/checkout@v4
