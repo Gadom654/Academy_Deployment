@@ -68,6 +68,8 @@ jobs:
           tflint --init
           tflint -f compact
       
+      - name: Terraform Init
+        run: terraform init
       - name: Terraform Plan
         run: terraform plan -out=main.tfplan
 
