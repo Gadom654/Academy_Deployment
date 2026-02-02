@@ -3,7 +3,7 @@ name: ECS App - Terraform
 on:
   push:
     paths:
-      - 'AWS/ECSapp' 
+      - 'AWS/ECSapp/**' 
 
 permissions:
   id-token: write
