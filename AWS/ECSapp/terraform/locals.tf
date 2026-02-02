@@ -19,6 +19,9 @@ locals {
   # --- ECR Configuration ---
   ecr_name = "${local.name}-repo"
 
+  # --- CloudWatch Configuration ---
+  cloudwatch_log_group_retention_in_days = 14
+
   # --- ALB Configuration ---
   alb_name          = "${local.name}-alb"
   http_port         = 80
@@ -97,6 +100,7 @@ locals {
           ]
           enable_cloudwatch_logging = true
           cloudwatch_log_group_name = "/ecs/hello-api"
+          cloudwatch_log_group_retention_in_days = 14
         }
       }
 

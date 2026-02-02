@@ -59,7 +59,7 @@ module "ecs" {
   cluster_name                           = local.cluster_name
   cluster_configuration                  = local.cluster_configuration
   create_cloudwatch_log_group            = true
-  cloudwatch_log_group_retention_in_days = 14
+  cloudwatch_log_group_retention_in_days = local.cloudwatch_log_group_retention_in_days
   services                               = local.ecs_services
 
   tags = local.tags
