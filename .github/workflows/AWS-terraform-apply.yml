@@ -1,0 +1,65 @@
+name: "AWS Terraform CI/CD apply pipeline"
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: false
+        type: string
+        default: "."
+        description: "Path to the Terraform code"
+      aws_plan_role:
+        required: true
+        type: string
+        default: "arn:aws:iam::<YOUR_ACCOUNT_ID>:role/github-actions-ecs-role"
+      region:
+        required: false
+        type: string
+        default: "eu-north-1"
+      environment:
+        required: false
+        type: string
+        default: "AWS_APPLY"
+        description: "GitHub Environment for Plan stage"
+
+
+
+permissions:
+      id-token: write 
+      contents: read 
+
+jobs:
+  apply:
+    name: "Terraform Apply"
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    environment: ${{ inputs.environment }}
+    env:
+      aws_plan_role: ${{ inputs.aws_plan_role }}
+      region: ${{ inputs.region }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ inputs.working_directory }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.aws_plan_role }}
+          aws-region: ${{ env.region }}
+      
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve main.tfplan

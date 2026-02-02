@@ -1,0 +1,29 @@
+name: ECS App - Terraform
+
+on:
+  push:
+    paths:
+      - 'AWS/ECSapp' 
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  plan:
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-plan.yml@main
+    with:
+      working_directory: "./AWS/ECSapp/terrraform"
+      aws_plan_role: ${{ vars.AWS_PLAN_ROLE }}
+  apply:
+    needs: plan  
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-apply.yml@main
+    with:
+      working_directory: "./AWS/ECSapp/terrraform"
+      aws_plan_role: ${{ vars.AWS_PLAN_ROLE }} 
+  destroy:  
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-destroy.yml@main
+    with:
+      working_directory: "./AWS/ECSapp/terrraform"
+      aws_plan_role: ${{ vars.AWS_PLAN_ROLE }}
