@@ -1,13 +1,13 @@
 locals {
+  # --- General Configuration ---
   tags = {
     "project"     = "ecs"
     "environment" = "production"
     "owner"       = "Dominik"
     "created_by"  = "Terraform"
   }
-  # --- General Configuration ---
   region = "eu-north-1"
-  name   = "ecs" # Base name used to derive others
+  name   = "ecs"
 
   # --- VPC Configuration ---
   vpc_name        = "${local.name}-vpc"
@@ -31,9 +31,9 @@ locals {
   cpu            = 256
   memory         = 512
   desired_count  = 1
-  max_capacity   = 2
+  max_capacity   = 3
 
-  # --- Complex Object Maps ---
+  # --- LB Configuration ---
   alb_target_groups = {
     ecs-app = {
       name_prefix      = "${local.name}-tg"
@@ -53,6 +53,16 @@ locals {
     }
   }
 
+  # --- Cluster Configuration ---
+  cluster_configuration = {
+    execute_command_configuration = {
+      logging = "OVERRIDE"
+      log_configuration = {
+        cloud_watch_log_group_name = "/ecs/hello-api"
+      }
+    }
+  }
+  # --- Service Configuration ---
   ecs_services = {
     ecs-tg = {
       cpu                      = local.cpu
@@ -62,7 +72,19 @@ locals {
       desired_count            = local.desired_count
       enable_autoscaling       = true
       autoscaling_max_capacity = local.max_capacity
-
+      autoscaling_policies = {
+        cpu_utilization = {
+          policy_type = "TargetTrackingScaling"
+          target_tracking_configuration = {
+            predefined_metric_specification = {
+              predefined_metric_type = "ECSServiceAverageCPUUtilization"
+            }
+            target_value       = 50.0
+            scale_in_cooldown  = 300
+            scale_out_cooldown = 60
+          }
+        }
+      }
       container_definitions = {
         (local.container_name) = {
           image = "${aws_ecr_repository.app.repository_url}:latest"

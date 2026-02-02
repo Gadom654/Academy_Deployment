@@ -56,8 +56,11 @@ module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
   version = "~> 6.0"
 
-  cluster_name = local.cluster_name
-  services     = local.ecs_services
+  cluster_name                           = local.cluster_name
+  cluster_configuration                  = local.cluster_configuration
+  create_cloudwatch_log_group            = true
+  cloudwatch_log_group_retention_in_days = 14
+  services                               = local.ecs_services
 
   tags = local.tags
 }
