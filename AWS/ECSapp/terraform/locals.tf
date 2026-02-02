@@ -1,9 +1,9 @@
 locals {
   tags = {
-  "project"     = "ecs"
-  "environment" = "production"
-  "owner"       = "Dominik"
-  "created_by"  = "Terraform"
+    "project"     = "ecs"
+    "environment" = "production"
+    "owner"       = "Dominik"
+    "created_by"  = "Terraform"
   }
   # --- General Configuration ---
   region = "eu-north-1"
@@ -20,9 +20,9 @@ locals {
   ecr_name = "${local.name}-repo"
 
   # --- ALB Configuration ---
-  alb_name           = "${local.name}-alb"
-  http_port          = 80
-  health_check_path  = "/"
+  alb_name          = "${local.name}-alb"
+  http_port         = 80
+  health_check_path = "/"
 
   # --- ECS Configuration ---
   cluster_name   = "${local.name}-cluster"
@@ -36,7 +36,7 @@ locals {
   # --- Complex Object Maps ---
   alb_target_groups = {
     ecs-app = {
-      name_prefix = "${local.name}-tg"
+      name_prefix      = "${local.name}-tg"
       backend_protocol = "HTTP"
       backend_port     = local.container_port
       target_type      = "ip"
@@ -55,12 +55,12 @@ locals {
 
   ecs_services = {
     ecs-tg = {
-      cpu                   = local.cpu
-      memory                = local.memory
-      subnet_ids            = module.vpc.private_subnets
-      assign_public_ip      = false
-      desired_count         = local.desired_count
-      enable_autoscaling    = true
+      cpu                      = local.cpu
+      memory                   = local.memory
+      subnet_ids               = module.vpc.private_subnets
+      assign_public_ip         = false
+      desired_count            = local.desired_count
+      enable_autoscaling       = true
       autoscaling_max_capacity = local.max_capacity
 
       container_definitions = {
@@ -68,8 +68,8 @@ locals {
           image = "${aws_ecr_repository.app.repository_url}:latest"
           portMappings = [
             {
-              containerPort = local.container_port 
-              hostPort      = local.container_port 
+              containerPort = local.container_port
+              hostPort      = local.container_port
               protocol      = "tcp"
             }
           ]
@@ -97,10 +97,10 @@ locals {
       }
       security_group_egress_rules = {
         ecr_egress = {
-          to_port                      = 443
-          ip_protocol                  = "tcp"
-          description                  = "Allow traffic to ECR"
-          cidr_ipv4                    = "0.0.0.0/0"
+          to_port     = 443
+          ip_protocol = "tcp"
+          description = "Allow traffic to ECR"
+          cidr_ipv4   = "0.0.0.0/0"
         }
       }
     }
