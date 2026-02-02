@@ -3,7 +3,7 @@ name: ECS App - Terraform
 on:
   push:
     paths:
-      - 'AWS/ECSapp/terraform/**' 
+      - 'AWS/ECSapp/**' 
 
 permissions:
   id-token: write
@@ -28,5 +28,12 @@ jobs:
     uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-destroy.yml@main
     with:
       working_directory: "./AWS/ECSapp/terraform"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
+  docker:  
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-docker.yml@main
+    with:
+      working_directory: "./AWS/ECSapp/app"
+      repository: "ecs-repo"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
