@@ -1,4 +1,4 @@
-# AWS ECSApp v0.3.0
+# AWS ECSApp v0.3.1
 
 This repository contains a simple Flask application that is deployed to AWS ECS using Terraform.
 
@@ -15,6 +15,8 @@ terraform plan – Previews the infrastructure changes and validates your config
 
 terraform apply – Provisions the Azure resources and outputs your site URL.
 ## Changelog
+Version 0.3.1:
+    - quick fix for autoscaling options
 Version 0.3.0:
     - added autoscaling and log retantion policy
 Version 0.2.1:

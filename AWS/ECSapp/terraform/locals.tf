@@ -78,7 +78,7 @@ locals {
       autoscaling_policies = {
         cpu_utilization = {
           policy_type = "TargetTrackingScaling"
-          target_tracking_configuration = {
+          target_tracking_scaling_policy_configuration = {
             predefined_metric_specification = {
               predefined_metric_type = "ECSServiceAverageCPUUtilization"
             }
@@ -98,8 +98,8 @@ locals {
               protocol      = "tcp"
             }
           ]
-          enable_cloudwatch_logging = true
-          cloudwatch_log_group_name = "/ecs/hello-api"
+          enable_cloudwatch_logging              = true
+          cloudwatch_log_group_name              = "/ecs/hello-api"
           cloudwatch_log_group_retention_in_days = 14
         }
       }
