@@ -19,19 +19,19 @@ variable "region" {
 variable "namespace" {
   type        = string
   description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
-  default = "eks"
+  default     = "eks"
 }
 
 variable "name" {
   type        = string
   description = "Solution name, e.g. 'app' or 'jenkins'"
-  default = "eks"
+  default     = "eks"
 }
 
 variable "stage" {
   type        = string
   description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'test'"
-  default = "prod"
+  default     = "prod"
 }
 
 variable "delimiter" {
@@ -44,7 +44,7 @@ variable "delimiter" {
 variable "availability_zones" {
   type        = list(string)
   description = "List of Availability Zones where subnets will be created"
-  default = ["eu-north-1a", "eu-north-1b"]
+  default     = ["eu-north-1a", "eu-north-1b"]
 }
 
 # --- EKS Cluster Variables ---
