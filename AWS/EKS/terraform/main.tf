@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 module "label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
@@ -71,7 +69,7 @@ module "eks_cluster" {
       addon_version               = var.vpc_cni_version
       resolve_conflicts_on_create = "OVERWRITE"
       resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = var.vpc_cni_service_account_role_arn # Creating this role is outside the scope of this example
+      service_account_role_arn    = var.vpc_cni_service_account_role_arn
     },
     # https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html
     {
