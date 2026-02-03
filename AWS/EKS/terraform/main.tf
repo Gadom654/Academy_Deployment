@@ -1,91 +1,91 @@
 module "label" {
-    source = "cloudposse/label/null"
+  source = "cloudposse/label/null"
 
-    namespace  = var.namespace
-    name       = var.name
-    stage      = var.stage
-    delimiter  = var.delimiter
-    tags       = var.tags
-  }
+  namespace = var.namespace
+  name      = var.name
+  stage     = var.stage
+  delimiter = var.delimiter
+  tags      = var.tags
+}
 
 module "vpc" {
-    source = "cloudposse/vpc/aws"
+  source = "cloudposse/vpc/aws"
 
-    ipv4_primary_cidr_block = "172.16.0.0/16"
+  ipv4_primary_cidr_block = "172.16.0.0/16"
 
-    tags    = local.tags
-    context = module.label.context
-  }
+  tags    = local.tags
+  context = module.label.context
+}
 
 module "subnets" {
-    source = "cloudposse/dynamic-subnets/aws"
+  source = "cloudposse/dynamic-subnets/aws"
 
-    availability_zones   = var.availability_zones
-    vpc_id               = module.vpc.vpc_id
-    igw_id               = [module.vpc.igw_id]
-    ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
-    nat_gateway_enabled  = true
-    nat_instance_enabled = false
+  availability_zones   = var.availability_zones
+  vpc_id               = module.vpc.vpc_id
+  igw_id               = [module.vpc.igw_id]
+  ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
+  nat_gateway_enabled  = true
+  nat_instance_enabled = false
 
-    public_subnets_additional_tags  = local.public_subnets_additional_tags
-    private_subnets_additional_tags = local.private_subnets_additional_tags
+  public_subnets_additional_tags  = local.public_subnets_additional_tags
+  private_subnets_additional_tags = local.private_subnets_additional_tags
 
-    tags    = local.tags
-    context = module.label.context
-  }
+  tags    = local.tags
+  context = module.label.context
+}
 
 module "eks_node_group" {
-    source = "cloudposse/eks-node-group/aws"
+  source = "cloudposse/eks-node-group/aws"
 
-    desired_size = var.desired_size
-    instance_types    = [var.instance_type]
-    subnet_ids        = module.subnets.private_subnet_ids
-    min_size          = var.min_size
-    max_size          = var.max_size
-    cluster_name      = module.eks_cluster.eks_cluster_id
+  desired_size   = var.desired_size
+  instance_types = [var.instance_type]
+  subnet_ids     = module.subnets.private_subnet_ids
+  min_size       = var.min_size
+  max_size       = var.max_size
+  cluster_name   = module.eks_cluster.eks_cluster_id
 
-    # Enable the Kubernetes cluster auto-scaler to find the auto-scaling group
-    cluster_autoscaler_enabled = var.autoscaling_policies_enabled
+  # Enable the Kubernetes cluster auto-scaler to find the auto-scaling group
+  cluster_autoscaler_enabled = var.autoscaling_policies_enabled
 
-    context = module.label.context
-  }
+  context = module.label.context
+}
 
 module "eks_cluster" {
-    source = "cloudposse/eks-cluster/aws"
+  source = "cloudposse/eks-cluster/aws"
 
-    subnet_ids            = concat(module.subnets.private_subnet_ids, module.subnets.public_subnet_ids)
-    kubernetes_version    = var.kubernetes_version
-    oidc_provider_enabled = true
+  subnet_ids            = concat(module.subnets.private_subnet_ids, module.subnets.public_subnet_ids)
+  kubernetes_version    = var.kubernetes_version
+  oidc_provider_enabled = true
 
-    addons = [
-      # https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html#vpc-cni-latest-available-version
-      {
-        addon_name                  = "vpc-cni"
-        addon_version               = var.vpc_cni_version
-        resolve_conflicts_on_create = "OVERWRITE"
-        resolve_conflicts_on_update = "OVERWRITE"
-        service_account_role_arn    = var.vpc_cni_service_account_role_arn # Creating this role is outside the scope of this example
-      },
-      # https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html
-      {
-        addon_name                  = "kube-proxy"
-        addon_version               = var.kube_proxy_version
-        resolve_conflicts_on_create = "OVERWRITE"
-        resolve_conflicts_on_update = "OVERWRITE"
-        service_account_role_arn    = null
-      },
-      # https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html
-      {
-        addon_name                  = "coredns"
-        addon_version               = var.coredns_version
-        resolve_conflicts_on_create = "OVERWRITE"
-        resolve_conflicts_on_update = "OVERWRITE"
-        service_account_role_arn    = null
-      },
-    ]
-    addons_depends_on = [module.eks_node_group]
+  addons = [
+    # https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html#vpc-cni-latest-available-version
+    {
+      addon_name                  = "vpc-cni"
+      addon_version               = var.vpc_cni_version
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      service_account_role_arn    = var.vpc_cni_service_account_role_arn # Creating this role is outside the scope of this example
+    },
+    # https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html
+    {
+      addon_name                  = "kube-proxy"
+      addon_version               = var.kube_proxy_version
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      service_account_role_arn    = null
+    },
+    # https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html
+    {
+      addon_name                  = "coredns"
+      addon_version               = var.coredns_version
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      service_account_role_arn    = null
+    },
+  ]
+  addons_depends_on = [module.eks_node_group]
 
-    context = module.label.context
+  context = module.label.context
 
-    cluster_depends_on = [module.subnets]
-  }
+  cluster_depends_on = [module.subnets]
+}
