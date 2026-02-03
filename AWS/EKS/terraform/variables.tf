@@ -1,4 +1,5 @@
 variable "tags" {
+  type        = map(string)
   description = "list of tags to add to each resource"
   default = {
     "project"     = "eks"
@@ -9,6 +10,7 @@ variable "tags" {
 }
 
 variable "region" {
+  type        = string
   description = "AWS region"
   default     = "eu-north-1"
 }

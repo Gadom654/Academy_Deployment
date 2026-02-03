@@ -5,7 +5,8 @@ data "aws_iam_session_context" "current" {
 }
 
 module "label" {
-  source = "cloudposse/label/null"
+  source  = "cloudposse/label/null"
+  version = "latest"
 
   namespace = var.namespace
   name      = var.name
@@ -15,7 +16,8 @@ module "label" {
 }
 
 module "vpc" {
-  source = "cloudposse/vpc/aws"
+  source  = "cloudposse/vpc/aws"
+  version = "latest"
 
   ipv4_primary_cidr_block = "172.16.0.0/16"
 
@@ -24,7 +26,8 @@ module "vpc" {
 }
 
 module "subnets" {
-  source = "cloudposse/dynamic-subnets/aws"
+  source  = "cloudposse/dynamic-subnets/aws"
+  version = "latest"
 
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
@@ -41,7 +44,8 @@ module "subnets" {
 }
 
 module "eks_node_group" {
-  source = "cloudposse/eks-node-group/aws"
+  source  = "cloudposse/eks-node-group/aws"
+  version = "latest"
 
   desired_size   = var.desired_size
   instance_types = [var.instance_type]
@@ -57,7 +61,8 @@ module "eks_node_group" {
 }
 
 module "eks_cluster" {
-  source = "cloudposse/eks-cluster/aws"
+  source  = "cloudposse/eks-cluster/aws"
+  version = "latest"
 
   subnet_ids            = concat(module.subnets.private_subnet_ids, module.subnets.public_subnet_ids)
   kubernetes_version    = var.kubernetes_version
