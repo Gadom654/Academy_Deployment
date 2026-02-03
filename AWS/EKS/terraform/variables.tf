@@ -110,7 +110,7 @@ variable "autoscaling_policies_enabled" {
 }
 
 variable "ami_type" {
-  type = string
-  default = "AL2023_x86_64_STANDARD"
+  type        = string
+  default     = "AL2023_x86_64_STANDARD"
   description = "Ami type used in EKS node group"
 }
