@@ -51,6 +51,8 @@ module "eks_node_group" {
   # Enable the Kubernetes cluster auto-scaler to find the auto-scaling group
   cluster_autoscaler_enabled = var.autoscaling_policies_enabled
 
+  ami_type = var.ami_type
+
   context = module.label.context
 }
 
