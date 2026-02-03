@@ -1,0 +1,32 @@
+name: EKS App - Terraform
+
+on:
+  push:
+    paths:
+      - 'AWS/EKS/**' 
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  plan:
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-plan.yml@main
+    with:
+      working_directory: "./AWS/EKS/terraform"
+    secrets:
+      aws_role: ${{ secrets.AWS_PLAN_ROLE }}
+  apply:
+    needs: plan  
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-apply.yml@main
+    with:
+      working_directory: "./AWS/EKS/terraform"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }} 
+  destroy:  
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-terraform-destroy.yml@main
+    with:
+      working_directory: "./AWS/EKS/terraform"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
