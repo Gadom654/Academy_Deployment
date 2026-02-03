@@ -3,3 +3,4 @@ Adding missed values like alb target group
 2nd step
 Fixed security groups
 3rd step
+Adding aws_appautoscaling_policy
