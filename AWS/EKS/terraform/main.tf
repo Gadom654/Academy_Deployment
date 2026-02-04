@@ -65,6 +65,16 @@ module "eks_cluster" {
   kubernetes_version    = var.kubernetes_version
   oidc_provider_enabled = true
 
+  allowed_security_group_ids = [module.ec2_bastion.security_group_id]
+
+  access_entry_map = {
+    (module.ec2_bastion.role) = {
+      access_policy_associations = {
+        AmazonEKSClusterAdminPolicy = {}
+      }
+    }
+  }
+
   endpoint_private_access = var.endpoint_private_access
   endpoint_public_access  = var.endpoint_public_access
 
@@ -100,17 +110,6 @@ module "eks_cluster" {
 
   cluster_depends_on = [module.subnets]
 }
-# AWS Key Pair Module
-module "aws_key_pair" {
-  source              = "cloudposse/key-pair/aws"
-  version             = "0.18.0"
-  attributes          = ["ssh", "key"]
-  ssh_public_key_file = var.ssh_key_name
-  ssh_public_key_path = var.ssh_key_path
-  generate_ssh_key    = var.generate_ssh_key
-
-  context = module.label.context
-}
 # Bastion module
 
 module "ec2_bastion" {
@@ -122,10 +121,27 @@ module "ec2_bastion" {
   instance_type               = var.bastion_instance_type
   security_groups             = compact(concat([module.vpc.vpc_default_security_group_id]))
   subnets                     = module.subnets.private_subnet_ids
-  key_name                    = module.aws_key_pair.key_name
   user_data                   = var.user_data
   vpc_id                      = module.vpc.vpc_id
   associate_public_ip_address = var.associate_public_ip_address
 
   context = module.label.context
+}
+
+# IAM access policy for bastion server to access EKS cluster
+data "aws_iam_policy_document" "bastion_eks_access" {
+  statement {
+    actions   = ["eks:DescribeCluster"]
+    resources = [module.eks_cluster.eks_cluster_arn]
+  }
+}
+
+resource "aws_iam_policy" "bastion_eks_access" {
+  name   = "${module.label.id}-bastion-eks"
+  policy = data.aws_iam_policy_document.bastion_eks_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "bastion_eks" {
+  role       = module.ec2_bastion.role
+  policy_arn = aws_iam_policy.bastion_eks_access.arn
 }

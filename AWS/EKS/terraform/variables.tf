@@ -141,24 +141,6 @@ variable "user_data" {
   description = "User data content"
 }
 
-variable "ssh_key_path" {
-  type        = string
-  default     = "./secrets"
-  description = "Save location to ssh public keys"
-}
-
-variable "ssh_key_name" {
-  type        = string
-  default     = "id_rsa.pub"
-  description = "Save location to ssh public keys"
-}
-
-variable "generate_ssh_key" {
-  type        = bool
-  default     = false
-  description = "Whether or not to generate an SSH key"
-}
-
 variable "associate_public_ip_address" {
   type        = bool
   default     = false
