@@ -129,12 +129,6 @@ variable "ami_type" {
 }
 
 #Bastion Variables
-variable "bastion_instance_type" {
-  type        = string
-  default     = "t2.micro"
-  description = "Bastion instance type"
-}
-
 variable "user_data" {
   type        = list(string)
   default     = []

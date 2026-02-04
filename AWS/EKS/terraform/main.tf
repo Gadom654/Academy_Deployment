@@ -118,7 +118,7 @@ module "ec2_bastion" {
 
   enabled = module.label.enabled
 
-  instance_type               = var.bastion_instance_type
+  instance_type               = var.instance_type
   security_groups             = compact(concat([module.vpc.vpc_default_security_group_id]))
   subnets                     = module.subnets.private_subnet_ids
   user_data                   = var.user_data
