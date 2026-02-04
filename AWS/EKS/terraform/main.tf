@@ -100,29 +100,32 @@ module "eks_cluster" {
 
   cluster_depends_on = [module.subnets]
 }
-# Bastion module
+# AWS Key Pair Module
 module "aws_key_pair" {
   source              = "cloudposse/key-pair/aws"
   version             = "0.18.0"
   attributes          = ["ssh", "key"]
+  ssh_public_key_file = var.ssh_key_name
   ssh_public_key_path = var.ssh_key_path
   generate_ssh_key    = var.generate_ssh_key
 
-  context = module.this.context
+  context = module.label.context
 }
+# Bastion module
 
 module "ec2_bastion" {
-  source = "cloudposse/ec2-bastion-server/aws"
+  source  = "cloudposse/ec2-bastion-server/aws"
+  version = "0.31.2"
 
-  enabled = module.this.enabled
+  enabled = module.label.enabled
 
   instance_type               = var.bastion_instance_type
-  security_groups             = compact(concat([module.vpc.vpc_default_security_group_id], var.security_groups))
+  security_groups             = compact(concat([module.vpc.vpc_default_security_group_id]))
   subnets                     = module.subnets.private_subnet_ids
   key_name                    = module.aws_key_pair.key_name
   user_data                   = var.user_data
   vpc_id                      = module.vpc.vpc_id
   associate_public_ip_address = var.associate_public_ip_address
 
-  context = module.this.context
+  context = module.label.context
 }

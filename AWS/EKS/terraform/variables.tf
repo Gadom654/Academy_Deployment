@@ -143,7 +143,13 @@ variable "user_data" {
 
 variable "ssh_key_path" {
   type        = string
-  default     = "./secrets/id_rsa.pub"
+  default     = "./secrets"
+  description = "Save location to ssh public keys"
+}
+
+variable "ssh_key_name" {
+  type        = string
+  default     = "id_rsa.pub"
   description = "Save location to ssh public keys"
 }
 
@@ -151,11 +157,6 @@ variable "generate_ssh_key" {
   type        = bool
   default     = false
   description = "Whether or not to generate an SSH key"
-}
-
-variable "security_groups" {
-  type        = list(string)
-  description = "List of Security Group IDs allowed to connect to the bastion host"
 }
 
 variable "root_block_device_encrypted" {
