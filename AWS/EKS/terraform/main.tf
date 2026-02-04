@@ -1,3 +1,4 @@
+# Label Module
 module "label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
@@ -8,7 +9,7 @@ module "label" {
   delimiter = var.delimiter
   tags      = var.tags
 }
-
+# VPC Module
 module "vpc" {
   source  = "cloudposse/vpc/aws"
   version = "3.0.0"
@@ -18,7 +19,7 @@ module "vpc" {
   tags    = local.tags
   context = module.label.context
 }
-
+# Dynamic Subnets Module
 module "subnets" {
   source  = "cloudposse/dynamic-subnets/aws"
   version = "3.1.0"
@@ -36,7 +37,7 @@ module "subnets" {
   tags    = local.tags
   context = module.label.context
 }
-
+# EKS Node Group Module
 module "eks_node_group" {
   source  = "cloudposse/eks-node-group/aws"
   version = "3.4.0"
@@ -55,14 +56,17 @@ module "eks_node_group" {
 
   context = module.label.context
 }
-
+# EKS Cluster Module
 module "eks_cluster" {
   source  = "cloudposse/eks-cluster/aws"
   version = "4.8.0"
 
-  subnet_ids            = concat(module.subnets.private_subnet_ids, module.subnets.public_subnet_ids)
+  subnet_ids            = module.subnets.private_subnet_ids
   kubernetes_version    = var.kubernetes_version
   oidc_provider_enabled = true
+
+  endpoint_private_access = var.endpoint_private_access
+  endpoint_public_access  = var.endpoint_public_access
 
   addons = [
     # https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html#vpc-cni-latest-available-version
@@ -95,4 +99,30 @@ module "eks_cluster" {
   context = module.label.context
 
   cluster_depends_on = [module.subnets]
+}
+# Bastion module
+module "aws_key_pair" {
+  source              = "cloudposse/key-pair/aws"
+  version             = "0.18.0"
+  attributes          = ["ssh", "key"]
+  ssh_public_key_path = var.ssh_key_path
+  generate_ssh_key    = var.generate_ssh_key
+
+  context = module.this.context
+}
+
+module "ec2_bastion" {
+  source = "cloudposse/ec2-bastion-server/aws"
+
+  enabled = module.this.enabled
+
+  instance_type               = var.instance_type
+  security_groups             = compact(concat([module.vpc.vpc_default_security_group_id], var.security_groups))
+  subnets                     = module.subnets.private_subnet_ids
+  key_name                    = module.aws_key_pair.key_name
+  user_data                   = var.user_data
+  vpc_id                      = module.vpc.vpc_id
+  associate_public_ip_address = var.associate_public_ip_address
+
+  context = module.this.context
 }
