@@ -68,7 +68,7 @@ module "eks_cluster" {
   allowed_security_group_ids = [module.ec2_bastion.security_group_id]
 
   access_entry_map = {
-    (module.ec2_bastion.role) = {
+    (data.aws_iam_role.bastion_role.arn) = {
       access_policy_associations = {
         AmazonEKSClusterAdminPolicy = {}
       }
@@ -126,6 +126,10 @@ module "ec2_bastion" {
   associate_public_ip_address = var.associate_public_ip_address
 
   context = module.label.context
+}
+
+data "aws_iam_role" "bastion_role" {
+  name = module.ec2_bastion.role
 }
 
 # IAM access policy for bastion server to access EKS cluster
