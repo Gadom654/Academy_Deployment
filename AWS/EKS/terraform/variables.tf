@@ -55,14 +55,14 @@ variable "kubernetes_version" {
 }
 
 variable "endpoint_private_access" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "should be there a private endpoint for eks"
 }
 
 variable "endpoint_public_access" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "should be there a private endpoint for eks"
 }
 
