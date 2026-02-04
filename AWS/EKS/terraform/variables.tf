@@ -92,7 +92,7 @@ variable "coredns_version" {
 }
 
 # --- EKS Node Group Variables ---
-variable "bastion_instance_type" {
+variable "instance_type" {
   type        = string
   default     = "t3.medium"
   description = "Instance type for the EKS worker nodes"
@@ -129,7 +129,7 @@ variable "ami_type" {
 }
 
 #Bastion Variables
-variable "instance_type" {
+variable "bastion_instance_type" {
   type        = string
   default     = "t2.micro"
   description = "Bastion instance type"
