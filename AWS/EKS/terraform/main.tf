@@ -116,7 +116,7 @@ module "ec2_bastion" {
 
   enabled = module.this.enabled
 
-  instance_type               = var.instance_type
+  instance_type               = var.bastion_instance_type
   security_groups             = compact(concat([module.vpc.vpc_default_security_group_id], var.security_groups))
   subnets                     = module.subnets.private_subnet_ids
   key_name                    = module.aws_key_pair.key_name
