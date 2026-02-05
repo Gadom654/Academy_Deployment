@@ -180,3 +180,42 @@ module "waf" {
 
   context = module.label.context
 }
+
+# ARCs
+# Repo for api
+module "ecr_payment_api" {
+  source  = "cloudposse/ecr/aws"
+  version = "0.40.0"
+
+  name                   = "payment-api"
+  use_fullname           = false
+  image_tag_mutability   = "IMMUTABLE"
+  scan_images_on_push    = true 
+
+  context = module.label.context
+}
+
+# Repo for worker
+module "ecr_payment_worker" {
+  source  = "cloudposse/ecr/aws"
+  version = "0.40.0"
+
+  name                   = "payment-worker"
+  use_fullname           = false
+  image_tag_mutability   = "IMMUTABLE"
+  scan_images_on_push    = true
+
+  context = module.label.context
+}
+
+# Repo for helm chart
+module "ecr_payment_chart" {
+  source  = "cloudposse/ecr/aws"
+  version = "0.40.0"
+
+  name                   = "payment-chart"
+  use_fullname           = false
+  image_tag_mutability   = "MUTABLE"
+
+  context = module.label.context
+}
