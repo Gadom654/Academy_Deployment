@@ -1,0 +1,120 @@
+# Default values for nginx-chart.
+########################
+# Global Configuration #
+########################
+global:
+  env: "production"
+######################
+# Pods Configuration #
+######################
+components:
+  api:
+    name: "payment-api"
+    enabled: true
+    image:
+      repository: "paymentappacr.azurecr.io/payment-api"
+      tag: "1.0.0"
+      pullPolicy: "IfNotPresent"
+    containerPort: 8080
+    servicePort: 8080
+    replicaCount: 1
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 10
+      targetCPU: 80
+    probes:
+      liveness:
+        initialDelaySeconds: 60  
+        periodSeconds: 30    
+        failureThreshold: 3   
+      readiness:
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        failureThreshold: 3
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+
+  worker:
+    name: "payment-worker"
+    enabled: true
+    image:
+      repository: "paymentappacr.azurecr.io/payment-worker"
+      tag: "1.0.0"
+      pullPolicy: "IfNotPresent"
+    containerPort: 8090
+    servicePort: 8090
+    replicaCount: 1
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPU: 80
+    probes:
+      liveness:
+        initialDelaySeconds: 60  
+        periodSeconds: 30    
+        failureThreshold: 3   
+      readiness:
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        failureThreshold: 3
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+
+#########################
+# Service Configuration #
+#########################
+service:
+  name: nginx-lb
+  type: LoadBalancer
+  port: 8080
+  targetPort: 8080
+  protocol: TCP
+
+#########################
+# Ingress Configuration #
+#########################
+ingress:
+  enabled: true
+  healthPath: "/actuator/health"
+############################
+# Postgresql Configuration #
+############################
+db:
+  url: "jdbc:postgresql://10.0.4.4:5432/paymentapp-app-db"
+  host: 10.0.4.4
+  port: 5432
+  name: "paymentapp-payment-db"
+###########################
+# NetPolicy Configuration #
+###########################
+networkPolicy:
+  enabled: true
+  externalDbCidr: "10.0.1.0/24"
+  externalDbCidr2: "10.0.4.0/24"
+# Azure Configuration #
+azure:
+  enabled: true      
+  keyvaultName: "paymentapp-kv"
+  tenantId: "cda9a1f6-c3a2-40f6-a425-89316170fa38"
+  clientId: "1f37b28d-f38e-45fd-b66e-a8b0ee359d34"
+
+podLabels:
+  azure.workload.identity/use: "true"
+
+serviceAccount:
+  create: true   
+  name: "default" 
+  annotations:
+    azure.workload.identity/client-id: "1f37b28d-f38e-45fd-b66e-a8b0ee359d34"

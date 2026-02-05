@@ -1,0 +1,60 @@
+{{- range $key, $val := .Values.components }}
+{{- if $val.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ $val.name }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+    app.kubernetes.io/component: {{ $key }}
+spec:
+  replicas: {{ $val.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+        azure.workload.identity/use: "true"
+    spec:
+      containers:
+        - name: {{ $val.name }}
+          image: "{{ $val.image.repository }}:{{ $val.image.tag }}"
+          imagePullPolicy: {{ $val.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ $val.containerPort }}
+          resources:
+            {{- toYaml $val.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: payment-app-config
+            - secretRef:
+                name: payment-app-secrets
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          livenessProbe:
+            tcpSocket:
+              port: {{ $val.containerPort }}
+            initialDelaySeconds: {{ $val.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ $val.probes.liveness.periodSeconds }}
+            failureThreshold: {{ $val.probes.liveness.failureThreshold }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ $val.containerPort }}
+            initialDelaySeconds: {{ $val.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ $val.probes.readiness.periodSeconds }}
+            failureThreshold: {{ $val.probes.readiness.failureThreshold }}
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kv-payment-app"
+{{- end }}
+{{- end }}

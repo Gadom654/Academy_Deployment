@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-app-config
+  namespace: {{ .Release.Namespace }}
+data:
+  PAYMENT_DB_URL: {{ .Values.db.url | quote }}
+  PAYMENT_API_BASE_URL: http://app-payment-app-payment-api:8080
+  PAYMENT_WORKER_BASE_URL: http://app-payment-app-payment-worker:8090

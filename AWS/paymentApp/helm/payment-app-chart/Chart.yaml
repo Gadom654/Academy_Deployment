@@ -1,0 +1,6 @@
+apiVersion: v2
+name: payment-app-chart
+description: A Helm chart for my Nginx App
+type: application
+version: 1.0.12
+appVersion: "1.0.0"

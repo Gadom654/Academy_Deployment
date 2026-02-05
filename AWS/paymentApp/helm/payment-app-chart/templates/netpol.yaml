@@ -1,0 +1,87 @@
+{{- range $key, $val := .Values.components }}
+{{- if $val.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $.Release.Name }}-{{ $val.name }}-netpol
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
+  policyTypes:
+    - Ingress
+    - Egress
+
+  ingress:
+    {{- if eq $key "api" }}
+    - from:
+      - namespaceSelector: {}
+      - ipBlock:
+          cidr: "10.0.2.0/24"
+      ports:
+        - protocol: TCP
+          port: {{ $val.containerPort }}
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-worker
+      ports:
+        - protocol: TCP
+          port: 8080
+    {{- end }}
+    
+    {{- if eq $key "worker" }}
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: monitoring 
+      ports:
+        - protocol: TCP
+          port: {{ $val.containerPort }}
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-api
+      ports:
+        - protocol: TCP
+          port: 8090
+    {{- end }}
+
+  egress:
+    - to:
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-worker
+      ports:
+        - protocol: TCP
+          port: 8090
+    - to:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-payment-app-payment-api
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+      - ipBlock:
+          cidr: {{ $.Values.networkPolicy.externalDbCidr }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.db.port }}
+    - to:
+      - ipBlock:
+          cidr: {{ $.Values.networkPolicy.externalDbCidr2 }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.db.port }} 
+{{- end }}
+{{- end }}
