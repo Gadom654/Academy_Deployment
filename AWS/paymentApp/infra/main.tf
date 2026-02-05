@@ -21,7 +21,7 @@ module "rds" {
 
   vpc_id             = data.terraform_remote_state.platform.outputs.vpc_id
   subnet_ids         = data.terraform_remote_state.platform.outputs.database_subnet_ids
-  db_parameter_group = "postgres"
+  db_parameter_group = "postgres18"
   database_port      = 5432
 
   publicly_accessible = false
