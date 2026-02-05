@@ -60,6 +60,8 @@ module "eks_cluster_role" {
   source  = "cloudposse/iam-role/aws"
   version = "0.22.0"
 
+  policy_document_count = 0
+  
   name             = "eks-cluster"
   role_description = "Rola dla EKS Control Plane"
   principals       = { "Service" = ["eks.amazonaws.com"] }
@@ -74,6 +76,8 @@ module "eks_cluster_role" {
 module "eks_node_group_role" {
   source  = "cloudposse/iam-role/aws"
   version = "0.22.0"
+
+  policy_document_count = 0
 
   name             = "eks-node-group"
   role_description = "Rola dla worker nodes w EKS"
@@ -92,6 +96,8 @@ module "rds_admin_role" {
   source  = "cloudposse/iam-role/aws"
   version = "0.22.0"
 
+  policy_document_count = 0
+
   name                = "rds-admin"
   role_description    = "Rola do pelnego zarzadzania instancjami RDS"
   principals          = { "AWS" = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"] }
@@ -104,6 +110,8 @@ module "eks_lb_controller_role" {
   source  = "cloudposse/iam-role/aws"
   version = "0.22.0"
 
+  policy_document_count = 0
+  
   name             = "eks-lb-controller"
   role_description = "Rola dla AWS LB Controller w EKS"
 
@@ -113,7 +121,7 @@ module "eks_lb_controller_role" {
 
   context = module.label.context
 }
-
+# WAF Module
 module "waf" {
   source  = "cloudposse/waf/aws"
   version = "1.17.0"
