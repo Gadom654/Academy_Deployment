@@ -61,7 +61,7 @@ module "eks_cluster_role" {
   version = "0.22.0"
 
   policy_document_count = 0
-  
+
   name             = "eks-cluster"
   role_description = "Rola dla EKS Control Plane"
   principals       = { "Service" = ["eks.amazonaws.com"] }
@@ -111,7 +111,7 @@ module "eks_lb_controller_role" {
   version = "0.22.0"
 
   policy_document_count = 0
-  
+
   name             = "eks-lb-controller"
   role_description = "Rola dla AWS LB Controller w EKS"
 
