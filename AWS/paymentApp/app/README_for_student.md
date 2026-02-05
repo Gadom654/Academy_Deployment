@@ -6,7 +6,6 @@ This repository contains a simple payment processing system composed of two Spri
 - **payment-worker** — worker service responsible for receiving tasks from the API, performing simulated CPU-heavy computations, and sending callbacks back to the API.
 
 The entire system is designed to run locally using Docker and environment variables.
-
 ---
 
 # 🧱 1. Components Overview

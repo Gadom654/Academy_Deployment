@@ -1,0 +1,27 @@
+name: Payment docker contianers push
+
+on:
+  push:
+    paths:
+      - 'AWS/paymentApp/app/**' 
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  payment-api:  
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-docker.yml@main
+    with:
+      working_directory: "./AWS/paymentApp/app/payment-api"
+      repository: "payment-api"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
+  payment-worker: 
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-docker.yml@main
+    with:
+      working_directory: "./AWS/paymentApp/app/payment-worker"
+      repository: "payment-worker"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
