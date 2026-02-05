@@ -187,10 +187,10 @@ module "ecr_payment_api" {
   source  = "cloudposse/ecr/aws"
   version = "0.40.0"
 
-  name                   = "payment-api"
-  use_fullname           = false
-  image_tag_mutability   = "IMMUTABLE"
-  scan_images_on_push    = true 
+  name                 = "payment-api"
+  use_fullname         = false
+  image_tag_mutability = "IMMUTABLE"
+  scan_images_on_push  = true
 
   context = module.label.context
 }
@@ -200,10 +200,10 @@ module "ecr_payment_worker" {
   source  = "cloudposse/ecr/aws"
   version = "0.40.0"
 
-  name                   = "payment-worker"
-  use_fullname           = false
-  image_tag_mutability   = "IMMUTABLE"
-  scan_images_on_push    = true
+  name                 = "payment-worker"
+  use_fullname         = false
+  image_tag_mutability = "IMMUTABLE"
+  scan_images_on_push  = true
 
   context = module.label.context
 }
@@ -213,9 +213,9 @@ module "ecr_payment_chart" {
   source  = "cloudposse/ecr/aws"
   version = "0.40.0"
 
-  name                   = "payment-chart"
-  use_fullname           = false
-  image_tag_mutability   = "MUTABLE"
+  name                 = "payment-chart"
+  use_fullname         = false
+  image_tag_mutability = "MUTABLE"
 
   context = module.label.context
 }
