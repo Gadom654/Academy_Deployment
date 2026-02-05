@@ -1,4 +1,4 @@
-name: EKS App - Terraform
+name: Payment App Platform - Terraform
 
 on:
   push:

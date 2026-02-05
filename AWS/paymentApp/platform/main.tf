@@ -28,7 +28,7 @@ module "eks_subnets" {
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
   igw_id               = [module.vpc.igw_id]
-  ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
+  ipv4_cidr_block      = ["10.0.0.0/18"]
   nat_gateway_enabled  = true
   nat_instance_enabled = false
 
@@ -46,7 +46,7 @@ module "db_subnets" {
   availability_zones     = var.availability_zones
   vpc_id                 = module.vpc.vpc_id
   igw_id                 = []
-  ipv4_cidr_block        = [module.vpc.vpc_cidr_block]
+  ipv4_cidr_block        = ["10.0.64.0/20"]
   nat_gateway_enabled    = false
   public_subnets_enabled = false
 
