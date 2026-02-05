@@ -9,45 +9,38 @@ module "label" {
   delimiter = var.delimiter
   tags      = var.tags
 }
-# VPC Module
-module "vpc" {
-  source  = "cloudposse/vpc/aws"
-  version = "3.0.0"
+# DB Module
+module "rds" {
+  source  = "cloudposse/rds/aws"
+  version = "1.2.0"
 
-  ipv4_primary_cidr_block = "172.16.0.0/16"
+  engine         = "postgres"
+  engine_version = "18.1"
+  instance_class = "db.c6gd.medium"
+  name           = "postgresdb"
 
-  tags    = local.tags
+  vpc_id             = data.terraform_remote_state.platform.outputs.vpc_id
+  subnet_ids         = data.terraform_remote_state.platform.outputs.database_subnet_ids
+  db_parameter_group = "postgres"
+  database_port      = 5432
+
+  publicly_accessible = false
+  multi_az            = true
+  storage_encrypted   = true
+
   context = module.label.context
 }
-# Dynamic Subnets Module
-module "subnets" {
-  source  = "cloudposse/dynamic-subnets/aws"
-  version = "3.1.0"
-
-  availability_zones   = var.availability_zones
-  vpc_id               = module.vpc.vpc_id
-  igw_id               = [module.vpc.igw_id]
-  ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
-  nat_gateway_enabled  = true
-  nat_instance_enabled = false
-
-  public_subnets_additional_tags  = local.public_subnets_additional_tags
-  private_subnets_additional_tags = local.private_subnets_additional_tags
-
-  tags    = local.tags
-  context = module.label.context
-}
-# EKS Node Group Module
 module "eks_node_group" {
   source  = "cloudposse/eks-node-group/aws"
   version = "3.4.0"
 
   desired_size   = var.desired_size
   instance_types = [var.instance_type]
-  subnet_ids     = module.subnets.private_subnet_ids
+  subnet_ids     = data.terraform_remote_state.platform.outputs.private_subnet_ids
   min_size       = var.min_size
   max_size       = var.max_size
   cluster_name   = module.eks_cluster.eks_cluster_id
+  node_role_arn  = [data.terraform_remote_state.platform.outputs.eks_node_group_role_arn]
 
   # Enable the Kubernetes cluster auto-scaler to find the auto-scaling group
   cluster_autoscaler_enabled = var.autoscaling_policies_enabled
@@ -61,14 +54,14 @@ module "eks_cluster" {
   source  = "cloudposse/eks-cluster/aws"
   version = "4.8.0"
 
-  subnet_ids            = module.subnets.private_subnet_ids
-  kubernetes_version    = var.kubernetes_version
-  oidc_provider_enabled = true
-
-  allowed_security_group_ids = [module.ec2_bastion.security_group_id]
+  subnet_ids                   = data.terraform_remote_state.platform.outputs.private_subnet_ids
+  kubernetes_version           = var.kubernetes_version
+  oidc_provider_enabled        = true
+  create_eks_service_role      = false
+  eks_cluster_service_role_arn = data.terraform_remote_state.platform.outputs.eks_cluster_role_arn
 
   access_entry_map = {
-    (data.aws_iam_role.bastion_role.arn) = {
+    (data.terraform_remote_state.platform.outputs.eks_cluster_role_arn) = {
       access_policy_associations = {
         AmazonEKSClusterAdminPolicy = {}
       }
@@ -107,45 +100,5 @@ module "eks_cluster" {
   addons_depends_on = [module.eks_node_group]
 
   context = module.label.context
-
-  cluster_depends_on = [module.subnets]
 }
 # Bastion module
-
-module "ec2_bastion" {
-  source  = "cloudposse/ec2-bastion-server/aws"
-  version = "0.31.2"
-
-  enabled = module.label.enabled
-
-  instance_type               = var.instance_type
-  security_groups             = compact(concat([module.vpc.vpc_default_security_group_id]))
-  subnets                     = module.subnets.private_subnet_ids
-  user_data                   = var.user_data
-  vpc_id                      = module.vpc.vpc_id
-  associate_public_ip_address = var.associate_public_ip_address
-
-  context = module.label.context
-}
-
-data "aws_iam_role" "bastion_role" {
-  name = module.ec2_bastion.role
-}
-
-# IAM access policy for bastion server to access EKS cluster
-data "aws_iam_policy_document" "bastion_eks_access" {
-  statement {
-    actions   = ["eks:DescribeCluster"]
-    resources = [module.eks_cluster.eks_cluster_arn]
-  }
-}
-
-resource "aws_iam_policy" "bastion_eks_access" {
-  name   = "${module.label.id}-bastion-eks"
-  policy = data.aws_iam_policy_document.bastion_eks_access.json
-}
-
-resource "aws_iam_role_policy_attachment" "bastion_eks" {
-  role       = module.ec2_bastion.role
-  policy_arn = aws_iam_policy.bastion_eks_access.arn
-}

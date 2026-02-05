@@ -40,13 +40,6 @@ variable "delimiter" {
   description = "Delimiter to be used between ID elements"
 }
 
-# --- Network Variables ---
-variable "availability_zones" {
-  type        = list(string)
-  description = "List of Availability Zones where subnets will be created"
-  default     = ["eu-north-1a", "eu-north-1b"]
-}
-
 # --- EKS Cluster Variables ---
 variable "kubernetes_version" {
   type        = string
@@ -126,17 +119,4 @@ variable "ami_type" {
   type        = string
   default     = "AL2023_x86_64_STANDARD"
   description = "Ami type used in EKS node group"
-}
-
-#Bastion Variables
-variable "user_data" {
-  type        = list(string)
-  default     = []
-  description = "User data content"
-}
-
-variable "associate_public_ip_address" {
-  type        = bool
-  default     = false
-  description = "Whether to associate public IP to the instance."
 }
