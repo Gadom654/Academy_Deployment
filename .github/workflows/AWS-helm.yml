@@ -68,8 +68,10 @@ jobs:
           helm package ${{ env.repository }} --destination .
 
       - name: Push Chart to ACR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           # Find the .tgz file we just created and push it
           CHART_PACKAGE=$(ls *.tgz)
-          helm push $CHART_PACKAGE oci://${{ env.repository }}/
-          echo "✅ Pushed $CHART_PACKAGE to oci://${{ env.repository }}/"
+          helm push $CHART_PACKAGE oci://${{ env.ECR_REGISTRY }}/
+          echo "✅ Pushed $CHART_PACKAGE to oci://${{ env.ECR_REGISTRY }}/"
