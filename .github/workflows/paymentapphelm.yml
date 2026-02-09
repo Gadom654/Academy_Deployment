@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   helm: 
-    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-docker.yml@main
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-helm.yml@main
     with:
       working_directory: "./AWS/paymentApp/helm"
       repository: "payment-app-chart"
