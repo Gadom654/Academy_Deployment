@@ -228,7 +228,7 @@ module "instance" {
 
   # Instance Configuration
   instance_type = "t3.small"
-  ami           = "ami-0e63a5a9c1c7e5563"
+  ami           = "ami-073130f74f5ffb161"
   vpc_id        = module.vpc.vpc_id
   subnet        = module.eks_subnets.public_subnet_ids[0]
 
