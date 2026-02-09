@@ -130,5 +130,5 @@ variable "db_username" {
 variable "db_password" {
   type        = string
   description = "Password for the RDS database"
-  default     = "pgadmin"
+  default     = "pgadmin123"
 }
