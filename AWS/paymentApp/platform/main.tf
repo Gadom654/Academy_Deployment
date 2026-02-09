@@ -219,3 +219,58 @@ module "ecr_payment_chart" {
 
   context = module.label.context
 }
+
+# OpenVPN Instance
+module "instance" {
+  source  = "cloudposse/ec2-instance/aws"
+  version = "2.0.0"
+  name        = "openvpn"
+  
+  # Instance Configuration
+  instance_type               = "t3.small"
+  ami                         = "ami-0c7217cdde317cfec"
+  vpc_id                      = data.terraform_remote_state.platform.outputs.vpc_id
+  subnet                      = data.terraform_remote_state.platform.outputs.public_subnet_ids[0]
+
+  # Networking
+  associate_public_ip_address = true
+  
+  # Security Group Rules for OpenVPN (UDP 1194)
+  security_group_rules = [
+    {
+      type        = "ingress"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow SSH from anywhere"
+    },
+    {
+      type        = "ingress"
+      from_port   = 1194
+      to_port     = 1194
+      protocol    = "udp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow OpenVPN traffic"
+    },
+    {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow all outbound traffic"
+    }
+  ]
+
+  # Automation script to install OpenVPN
+  user_data = <<-EOF
+              #!/bin/bash
+              curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+              chmod +x openvpn-install.sh
+              ./openvpn-install.sh install
+              ./openvpn-install.sh client add dominik
+              EOF
+
+  context = module.label.context
+}
