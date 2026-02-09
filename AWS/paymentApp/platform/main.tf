@@ -227,8 +227,8 @@ module "instance" {
   name    = "openvpn"
 
   # Instance Configuration
-  instance_type = "t3.micro"
-  ami           = "ami-04233b5aecce09244"
+  instance_type = "t3.small"
+  ami           = "ami-0e63a5a9c1c7e5563"
   vpc_id        = module.vpc.vpc_id
   subnet        = module.eks_subnets.public_subnet_ids[0]
 
