@@ -1,0 +1,21 @@
+name: Payment helm push
+
+on:
+  push:
+    paths:
+      - 'AWS/paymentApp/helm/**' 
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  helm: 
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-docker.yml@main
+    with:
+      working_directory: "./AWS/paymentApp/helm"
+      repository: "payment-app-chart"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
+  

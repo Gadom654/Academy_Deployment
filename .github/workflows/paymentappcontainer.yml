@@ -25,11 +25,3 @@ jobs:
       repository: "payment-worker"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
-  helm: 
-    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-docker.yml@main
-    with:
-      working_directory: "./AWS/paymentApp/helm"
-      repository: "payment-app-chart"
-    secrets:
-      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
-  
