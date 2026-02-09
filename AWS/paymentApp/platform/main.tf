@@ -224,17 +224,17 @@ module "ecr_payment_chart" {
 module "instance" {
   source  = "cloudposse/ec2-instance/aws"
   version = "2.0.0"
-  name        = "openvpn"
-  
+  name    = "openvpn"
+
   # Instance Configuration
-  instance_type               = "t3.small"
-  ami                         = "ami-0c7217cdde317cfec"
-  vpc_id                      = data.terraform_remote_state.platform.outputs.vpc_id
-  subnet                      = data.terraform_remote_state.platform.outputs.public_subnet_ids[0]
+  instance_type = "t3.small"
+  ami           = "ami-0c7217cdde317cfec"
+  vpc_id        = data.terraform_remote_state.platform.outputs.vpc_id
+  subnet        = data.terraform_remote_state.platform.outputs.public_subnet_ids[0]
 
   # Networking
   associate_public_ip_address = true
-  
+
   # Security Group Rules for OpenVPN (UDP 1194)
   security_group_rules = [
     {
