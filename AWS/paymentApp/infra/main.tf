@@ -101,4 +101,3 @@ module "eks_cluster" {
 
   context = module.label.context
 }
-# Bastion module

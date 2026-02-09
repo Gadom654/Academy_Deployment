@@ -1,0 +1,75 @@
+name: Helm build and Push to ECR
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: false
+        type: string
+        default: "."
+        description: "Path to the Terraform code"
+      region:
+        required: false
+        type: string
+        default: "eu-north-1"
+      environment:
+        required: false
+        type: string
+        default: "DOCKER"
+        description: "GitHub Environment for Plan stage"
+      repository:
+        required: true
+        type: string
+        default: "hello-api-repo"
+        description: "ECR Repository Name"
+    secrets:
+      aws_role:
+        required: true
+        description: "AWS Role ARN to assume"
+
+permissions:
+      id-token: write 
+      contents: read 
+
+jobs:
+  docker:
+    name: "Docker CI/CD pipeline"
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    environment: ${{ inputs.environment }}
+    env:
+      aws_role: ${{ secrets.aws_role }}
+      region: ${{ inputs.region }}
+      repository: ${{ inputs.repository }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.aws_role }}
+          aws-region: ${{ env.region }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Package Chart
+        run: |
+          helm package ${{ env.repository }} --destination .
+
+      - name: Push Chart to ACR
+        run: |
+          # Find the .tgz file we just created and push it
+          CHART_PACKAGE=$(ls *.tgz)
+          helm push $CHART_PACKAGE oci://${{ env.repository }}/
+          echo "✅ Pushed $CHART_PACKAGE to oci://${{ env.repository }}/"
