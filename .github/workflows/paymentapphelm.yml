@@ -15,7 +15,7 @@ jobs:
     uses: Gadom654/Academy_Deployment/.github/workflows/AWS-helm.yml@main
     with:
       working_directory: "./AWS/paymentApp/helm"
-      repository: "payment-app-chart"
+      repository: "payment-chart"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
   
