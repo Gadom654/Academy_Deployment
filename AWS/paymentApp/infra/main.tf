@@ -19,6 +19,11 @@ module "rds" {
   instance_class = "db.c6gd.medium"
   name           = "postgresdb"
 
+  database_user     = var.db_username
+  database_password = var.db_password
+
+  allocated_storage = 20
+
   vpc_id             = data.terraform_remote_state.platform.outputs.vpc_id
   subnet_ids         = data.terraform_remote_state.platform.outputs.database_subnet_ids
   db_parameter_group = "postgres18"

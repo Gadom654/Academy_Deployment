@@ -120,3 +120,15 @@ variable "ami_type" {
   default     = "AL2023_x86_64_STANDARD"
   description = "Ami type used in EKS node group"
 }
+# --- RDS Variables ---
+variable "db_username" {
+  type        = string
+  description = "Username for the RDS database"
+  default     = "pgadmin"
+}
+
+variable "db_password" {
+  type        = string
+  description = "Password for the RDS database"
+  default     = "pgadmin"
+}
