@@ -76,7 +76,7 @@ resource "aws_ecs_service" "web" {
   network_configuration {
     subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]
     security_groups  = [aws_security_group.tasks.id]
-    assign_public_ip = false 
+    assign_public_ip = false
   }
 
   load_balancer {
@@ -95,7 +95,7 @@ resource "aws_ecs_service" "web" {
   health_check_grace_period_seconds = 60
 
   lifecycle {
-    ignore_changes = [desired_count] 
+    ignore_changes = [desired_count]
   }
 
   depends_on = [

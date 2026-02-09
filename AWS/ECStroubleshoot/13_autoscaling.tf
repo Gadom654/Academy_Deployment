@@ -22,7 +22,7 @@ resource "aws_appautoscaling_policy" "ecs_policy_cpu" {
     }
 
     target_value       = var.cpu_target_percent
-    scale_in_cooldown  = 60   
-    scale_out_cooldown = 20    
+    scale_in_cooldown  = 60
+    scale_out_cooldown = 20
   }
 }

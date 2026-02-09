@@ -12,8 +12,8 @@ resource "aws_alb_target_group" "web_tg" {
   name        = "ecs-web-target-group"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = aws_vpc.main.id 
-  target_type = "ip"          
+  vpc_id      = aws_vpc.main.id
+  target_type = "ip"
 
   health_check {
     healthy_threshold   = "3"
@@ -21,7 +21,7 @@ resource "aws_alb_target_group" "web_tg" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/" 
+    path                = "/"
     unhealthy_threshold = "2"
   }
 }
@@ -39,5 +39,5 @@ resource "aws_lb_listener" "http" {
     target_group_arn = aws_alb_target_group.web_tg.arn
   }
 
-  depends_on = [ aws_lb.this , aws_alb_target_group.web_tg ]
+  depends_on = [aws_lb.this, aws_alb_target_group.web_tg]
 }

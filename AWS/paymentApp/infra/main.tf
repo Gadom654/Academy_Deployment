@@ -73,6 +73,11 @@ module "eks_cluster" {
     }
   }
 
+  allowed_cidr_blocks = [
+    "10.0.0.0/16",
+    "10.8.0.0/24"
+  ]
+
   endpoint_private_access = var.endpoint_private_access
   endpoint_public_access  = var.endpoint_public_access
 
