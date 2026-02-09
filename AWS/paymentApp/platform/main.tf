@@ -229,8 +229,8 @@ module "instance" {
   # Instance Configuration
   instance_type = "t3.small"
   ami           = "ami-0c7217cdde317cfec"
-  vpc_id        = data.terraform_remote_state.platform.outputs.vpc_id
-  subnet        = data.terraform_remote_state.platform.outputs.public_subnet_ids[0]
+  vpc_id        = module.vpc.vpc_id
+  subnet        = module.eks_subnets.public_subnet_ids[0]
 
   # Networking
   associate_public_ip_address = true
