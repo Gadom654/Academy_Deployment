@@ -18,6 +18,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
     spec:
+      serviceAccountName: {{ $.Values.serviceAccount.name }}
       containers:
         - name: {{ $val.name }}
           image: "{{ $val.image.repository }}:{{ $val.image.tag }}"
