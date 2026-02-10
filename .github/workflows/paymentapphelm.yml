@@ -26,7 +26,7 @@ jobs:
       working_directory: "./AWS/paymentApp/helm"
       repository: "payment-chart"
       cluster_name: "eks-prod-eks-cluster"
-      version: "1.0.10"
+      version: "1.0.11"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
       VPN_CONFIG: ${{ secrets.VPN_CONFIG }}

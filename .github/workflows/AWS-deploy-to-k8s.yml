@@ -92,10 +92,11 @@ jobs:
           CHART_NAME: ${{ inputs.repository }}
           CHART_VERSION: ${{ inputs.version }}
         run: |
-          helm upgrade --install my-app oci://$ECR_REGISTRY/$CHART_NAME \
+          helm upgrade --install payment-app oci://$ECR_REGISTRY/$CHART_NAME \
             --version $CHART_VERSION \
-            --namespace default \
-            --values ./values-prod.yaml \
+            --namespace payment-app \
+            --create-namespace \
+            --values ./values.yaml \
             --set image.tag=${{ github.sha }} \
             --wait --timeout 5m
 

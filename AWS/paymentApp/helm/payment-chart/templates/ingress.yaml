@@ -4,9 +4,10 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   annotations:
-    kubernetes.io/ingress.class: azure/application-gateway
-    appgw.ingress.kubernetes.io/health-probe-path: {{ .Values.ingress.healthPath | quote }}
-    appgw.ingress.kubernetes.io/health-probe-port: "8080"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: {{ .Values.ingress.healthPath | quote }}
+    alb.ingress.kubernetes.io/healthcheck-port: "8080"
 spec:
   rules:
     - http:

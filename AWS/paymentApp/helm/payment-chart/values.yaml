@@ -104,17 +104,15 @@ networkPolicy:
   externalDbCidr: "10.0.1.0/24"
   externalDbCidr2: "10.0.4.0/24"
 # Azure Configuration #
-azure:
-  enabled: true      
-  keyvaultName: "paymentapp-kv"
-  tenantId: "cda9a1f6-c3a2-40f6-a425-89316170fa38"
-  clientId: "1f37b28d-f38e-45fd-b66e-a8b0ee359d34"
+aws:
+  roleArn: "arn:aws:iam::268836235026:role/payment-app-role"
+  region: "eu-north-1"
 
 podLabels:
   azure.workload.identity/use: "true"
 
 serviceAccount:
   create: true   
-  name: "default" 
+  name: "payment-app-sa"
   annotations:
-    azure.workload.identity/client-id: "1f37b28d-f38e-45fd-b66e-a8b0ee359d34"
+    eks.amazonaws.com/role-arn: "arn:aws:iam::268836235026:role/payment-app-role"

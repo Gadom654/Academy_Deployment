@@ -17,7 +17,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: {{ $.Release.Name }}-{{ $val.name }}
-        azure.workload.identity/use: "true"
     spec:
       containers:
         - name: {{ $val.name }}
@@ -55,6 +54,6 @@ spec:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: "azure-kv-payment-app"
+              secretProviderClass: "aws-ssm-payment-app" # Must match metadata.name above
 {{- end }}
 {{- end }}
