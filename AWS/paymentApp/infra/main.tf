@@ -71,6 +71,11 @@ module "eks_cluster" {
         AmazonEKSClusterAdminPolicy = {}
       }
     }
+    (data.terraform_remote_state.platform.outputs.instance_role) = {
+      access_policy_associations = {
+        AmazonEKSClusterAdminPolicy = {}
+      }
+    }
   }
 
   allowed_cidr_blocks = [

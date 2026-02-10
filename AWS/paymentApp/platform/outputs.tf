@@ -49,3 +49,9 @@ output "waf_acl_arn" {
   description = "ARN of the WAFv2 Web ACL to be used in Ingress annotations"
   value       = module.waf.arn
 }
+
+# Instance Outputs
+output "instance_role" {
+  description = "ARN of the IAM role for EC2 instances in the EKS Node Group"
+  value       = module.instances.instance_role_arn
+}
