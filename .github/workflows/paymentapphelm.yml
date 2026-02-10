@@ -18,4 +18,15 @@ jobs:
       repository: "payment-chart"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
-  
+  deploy:
+    needs: helm
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-deploy-to-k8s.yml@main
+    with:
+      environment: "AWS_APPLY"
+      working_directory: "./AWS/paymentApp/helm"
+      repository: "payment-chart"
+      cluster_name: "eks-prod-eks-cluster"
+      version: "1.0.10"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
+      VPN_CONFIG: ${{ secrets.VPN_CONFIG }}
