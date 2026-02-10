@@ -53,5 +53,5 @@ output "waf_acl_arn" {
 # Instance Outputs
 output "instance_role" {
   description = "ARN of the IAM role for EC2 instances in the EKS Node Group"
-  value       = module.instances.instance_role_arn
+  value       = module.instance.instance_role_arn
 }
