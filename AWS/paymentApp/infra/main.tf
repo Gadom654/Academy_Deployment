@@ -196,6 +196,8 @@ module "lbc_role" {
   source  = "cloudposse/eks-iam-role/aws"
   version = "2.1.0"
 
+  label_order = ["name"]
+
   namespace = "kube-system"
   name      = "aws-load-balancer-controller"
 
