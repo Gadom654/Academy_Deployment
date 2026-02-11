@@ -106,21 +106,6 @@ module "rds_admin_role" {
   context = module.label.context
 }
 
-module "eks_lb_controller_role" {
-  source  = "cloudposse/iam-role/aws"
-  version = "0.22.0"
-
-  policy_document_count = 0
-
-  name             = "eks-lb-controller"
-  role_description = "Rola dla AWS LB Controller w EKS"
-
-  principals = { "Service" = ["ec2.amazonaws.com"] }
-
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonEKSLoadBalancingPolicy"]
-
-  context = module.label.context
-}
 # WAF Module
 module "waf" {
   source  = "cloudposse/waf/aws"

@@ -183,25 +183,48 @@ module "ssm_parameters" {
   context = module.label.context
 }
 
-data "aws_iam_policy_document" "ssm_access" {
-  statement {
-    actions   = ["ssm:GetParameter", "ssm:GetParameters"]
-    resources = ["arn:aws:ssm:*:*:parameter/paymentapp-*"]
-  }
+# ALB controller module
+data "http" "lbc_iam_policy" {
+  url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json"
 }
-module "eks_iam_role" {
+
+resource "aws_iam_policy" "lbc_policy" {
+  name   = "AWSLoadBalancerControllerIAMPolicy"
+  policy = data.http.lbc_iam_policy.response_body
+}
+module "lbc_role" {
   source  = "cloudposse/eks-iam-role/aws"
   version = "2.1.0"
 
-  namespace = "payment-app"
-  name      = "payment-app-sa"
+  namespace = "kube-system"
+  name      = "aws-load-balancer-controller"
 
   eks_cluster_oidc_issuer_url = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  service_account_name        = "aws-load-balancer-controller"
+  service_account_namespace   = "kube-system"
 
-  service_account_name      = "payment-app-sa"
-  service_account_namespace = "payment-app"
-
-  aws_iam_policy_document = [data.aws_iam_policy_document.ssm_access.json]
+  aws_iam_policy_document = [aws_iam_policy.lbc_policy.policy]
 
   context = module.label.context
+}
+resource "helm_release" "lbc" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  namespace  = "kube-system"
+  version    = "1.17.1"
+
+  values = [
+    yamlencode({
+      clusterName = module.eks_cluster.eks_cluster_id
+      vpcId       = data.terraform_remote_state.platform.outputs.vpc_id
+      region      = var.region
+      serviceAccount = {
+        create = false
+        name   = "aws-load-balancer-controller"
+      }
+    })
+  ]
+
+  depends_on = [module.lbc_role]
 }
