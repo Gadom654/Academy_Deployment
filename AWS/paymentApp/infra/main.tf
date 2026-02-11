@@ -130,7 +130,7 @@ module "eks_cluster" {
         syncSecret = {
           enabled = true
         }
-        enableSecretRotation = "true" 
+        enableSecretRotation = "true"
       })
     },
     {
