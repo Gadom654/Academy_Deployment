@@ -94,8 +94,8 @@ ingress:
 # Postgresql Configuration #
 ############################
 db:
-  url: "jdbc:postgresql://eks-prod-postgresdb.cz6iumwikhur.eu-north-1.rds.amazonaws.com:5432/postgres"
-  host: eks-prod-postgresdb.cz6iumwikhur.eu-north-1.rds.amazonaws.com
+  url: "jdbc:postgresql://paymentapp-prod-postgresdb.cz6iumwikhur.eu-north-1.rds.amazonaws.com:5432/postgres"
+  host: paymentapp-prod-postgresdb.cz6iumwikhur.eu-north-1.rds.amazonaws.com
   port: 5432
   name: "postgres"
 ###########################
