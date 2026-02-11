@@ -34,7 +34,7 @@ resource "aws_security_group_rule" "allow_eks" {
   to_port                  = 5432
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds_access.id
-  source_security_group_id = module.eks_cluster.eks_cluster_security_group_id
+  source_security_group_id = module.eks_cluster.eks_cluster_managed_security_group_id
   description              = "Allow EKS nodes"
 }
 module "rds" {
