@@ -10,6 +10,15 @@ module "label" {
   tags      = var.tags
 }
 # DB Module
+resource "random_password" "db_password" {
+  length           = 24
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+  min_upper        = 2
+  min_lower        = 2
+  min_numeric      = 2
+  min_special      = 2
+}
 module "rds" {
   source  = "cloudposse/rds/aws"
   version = "1.2.0"
@@ -20,7 +29,7 @@ module "rds" {
   name           = "postgresdb"
 
   database_user     = var.db_username
-  database_password = var.db_password
+  database_password = random_password.db_password.result
 
   allocated_storage = 20
 
@@ -71,7 +80,7 @@ module "eks_cluster" {
         AmazonEKSClusterAdminPolicy = {}
       }
     }
-    (data.aws_caller_identity.applyer.arn) = {
+    ("arn:aws:sts::268836235026:assumed-role/github-actions-applyer-role") = {
       access_policy_associations = {
         AmazonEKSClusterAdminPolicy = {}
       }
@@ -134,6 +143,31 @@ module "eks_cluster" {
     },
   ]
   addons_depends_on = [module.eks_node_group]
+
+  context = module.label.context
+}
+
+# Parameter Store Module
+module "ssm_parameters" {
+  source  = "cloudposse/ssm-parameter-store/aws"
+  version = "0.13.0"
+
+  parameter_write = [
+    {
+      name        = "paymentapp-db-password"
+      description = "Master password for Postgres RDS"
+      type        = "SecureString"
+      value       = random_password.db_password.result
+      overwrite   = true
+    },
+    {
+      name        = "paymentapp-db-username"
+      description = "Master password for Postgres RDS"
+      type        = "String"
+      value       = var.db_username
+      overwrite   = true
+    }
+  ]
 
   context = module.label.context
 }
