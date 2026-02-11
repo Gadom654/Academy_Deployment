@@ -126,6 +126,12 @@ module "eks_cluster" {
       resolve_conflicts_on_create = "OVERWRITE"
       resolve_conflicts_on_update = "OVERWRITE"
       service_account_role_arn    = null
+      configuration_values = jsondecode({
+        syncSecret = {
+          enabled = true
+        }
+        enableSecretRotation = "true" 
+      })
     },
     {
       addon_name                  = "metrics-server"
