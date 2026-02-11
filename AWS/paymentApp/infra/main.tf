@@ -80,7 +80,7 @@ module "eks_cluster" {
         AmazonEKSClusterAdminPolicy = {}
       }
     }
-    ("arn:aws:sts::268836235026:assumed-role/github-actions-applyer-role") = {
+    ("arn:aws:iam::268836235026:role/github-actions-applyer-role") = {
       access_policy_associations = {
         AmazonEKSClusterAdminPolicy = {}
       }
