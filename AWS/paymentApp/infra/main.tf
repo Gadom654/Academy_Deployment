@@ -71,7 +71,7 @@ module "eks_cluster" {
         AmazonEKSClusterAdminPolicy = {}
       }
     }
-    (data.terraform_remote_state.platform.outputs.instance_role) = {
+    (data.aws_caller_identity.applyer.arn) = {
       access_policy_associations = {
         AmazonEKSClusterAdminPolicy = {}
       }
@@ -107,6 +107,27 @@ module "eks_cluster" {
     {
       addon_name                  = "coredns"
       addon_version               = var.coredns_version
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      service_account_role_arn    = null
+    },
+    {
+      addon_name                  = "aws-secrets-store-csi-driver-provider"
+      addon_version               = var.secret_store_version
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      service_account_role_arn    = null
+    },
+    {
+      addon_name                  = "metrics-server"
+      addon_version               = var.metrics-server_version
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      service_account_role_arn    = null
+    },
+    {
+      addon_name                  = "eks-pod-identity-agent"
+      addon_version               = var.eks-pod-identity-agent_version
       resolve_conflicts_on_create = "OVERWRITE"
       resolve_conflicts_on_update = "OVERWRITE"
       service_account_role_arn    = null

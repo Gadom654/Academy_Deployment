@@ -19,13 +19,13 @@ variable "region" {
 variable "namespace" {
   type        = string
   description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
-  default     = "eks"
+  default     = "paymentapp"
 }
 
 variable "name" {
   type        = string
   description = "Solution name, e.g. 'app' or 'jenkins'"
-  default     = "eks"
+  default     = "platform"
 }
 
 variable "stage" {
@@ -39,7 +39,6 @@ variable "delimiter" {
   default     = "-"
   description = "Delimiter to be used between ID elements"
 }
-
 # --- EKS Cluster Variables ---
 variable "kubernetes_version" {
   type        = string
@@ -62,7 +61,7 @@ variable "endpoint_public_access" {
 
 variable "vpc_cni_version" {
   type        = string
-  default     = null
+  default     = "v1.21.1-eksbuild.3"
   description = "Addon version for vpc-cni"
 }
 
@@ -74,14 +73,32 @@ variable "vpc_cni_service_account_role_arn" {
 
 variable "kube_proxy_version" {
   type        = string
-  default     = null
+  default     = "v1.34.0-eksbuild.2"
   description = "Addon version for kube-proxy"
 }
 
 variable "coredns_version" {
   type        = string
-  default     = null
+  default     = "v1.12.3-eksbuild.1"
   description = "Addon version for coredns"
+}
+
+variable "secret_store_version" {
+  type        = string
+  default     = "v2.1.1-eksbuild.1"
+  description = "Addon version for aws-secrets-store-csi-driver-provider"
+}
+
+variable "metrics-server_version" {
+  type        = string
+  default     = "v0.8.1-eksbuild.1"
+  description = "Addon version for metrics-server"
+}
+
+variable "eks-pod-identity-agent_version" {
+  type        = string
+  default     = "v1.3.10-eksbuild.2"
+  description = "Addon version for eks-pod-identity-agent"
 }
 
 # --- EKS Node Group Variables ---
