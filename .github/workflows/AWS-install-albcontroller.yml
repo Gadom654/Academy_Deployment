@@ -17,19 +17,10 @@ on:
         type: string
         default: "DOCKER"
         description: "GitHub Environment for Plan stage"
-      repository:
-        required: true
-        type: string
-        default: "hello-api-repo"
-        description: "ECR Repository Name"
       cluster_name:
         required: true
         type: string
         description: "Name of the EKS cluster"
-      version:
-        required: true
-        type: string
-        description: "Version of the Helm chart to deploy"
     secrets:
       aws_role:
         required: true
@@ -83,10 +74,6 @@ jobs:
           kubectl get nodes
 
       - name: Deploy Helm Chart
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          CHART_NAME: ${{ inputs.repository }}
-          CHART_VERSION: ${{ inputs.version }}
         run: |
           helm repo add eks https://aws.github.io/eks-charts
           helm repo update
