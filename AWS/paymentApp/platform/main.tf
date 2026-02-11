@@ -227,10 +227,11 @@ module "instance" {
   name    = "openvpn"
 
   # Instance Configuration
-  instance_type = "t3.small"
-  ami           = "ami-073130f74f5ffb161"
-  vpc_id        = module.vpc.vpc_id
-  subnet        = module.eks_subnets.public_subnet_ids[0]
+  instance_type     = "t3.small"
+  ami               = "ami-073130f74f5ffb161"
+  vpc_id            = module.vpc.vpc_id
+  subnet            = module.eks_subnets.public_subnet_ids[0]
+  source_dest_check = false
 
   # Networking
   associate_public_ip_address = true
@@ -272,4 +273,20 @@ module "instance" {
               EOF
 
   context = module.label.context
+}
+
+# Routes for OPENVPN
+resource "aws_route" "private_to_vpn" {
+  count                  = length(module.eks_subnets.private_route_table_ids)
+  route_table_id         = module.eks_subnets.private_route_table_ids[count.index]
+  destination_cidr_block = local.vpn_cidr
+  network_interface_id   = module.instance.primary_network_interface_id
+}
+
+# Add route to Public Subnets
+resource "aws_route" "public_to_vpn" {
+  count                  = length(module.eks_subnets.public_route_table_ids)
+  route_table_id         = module.eks_subnets.public_route_table_ids[count.index]
+  destination_cidr_block = local.vpn_cidr
+  network_interface_id   = module.instance.primary_network_interface_id
 }

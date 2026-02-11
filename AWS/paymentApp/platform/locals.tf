@@ -7,5 +7,5 @@ locals {
   private_subnets_additional_tags = {
     "kubernetes.io/role/internal-elb" : 1
   }
-
+  vpn_cidr = "10.8.0.0/24"
 }
