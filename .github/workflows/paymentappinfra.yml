@@ -30,3 +30,12 @@ jobs:
       working_directory: "./AWS/paymentApp/infra"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
+  deployalbcontroller:
+    uses: Gadom654/Academy_Deployment/.github/workflows/AWS-install-albcontroller.yml@main
+    with:
+      environment: "DOCKER"
+      working_directory: "./AWS/paymentApp/infra"
+      cluster_name: "paymentapp-prod-platform-cluster"
+    secrets:
+      aws_role: ${{ secrets.AWS_APPLY_ROLE }}
+      VPN_CONFIG: ${{ secrets.VPN_CONFIG }}

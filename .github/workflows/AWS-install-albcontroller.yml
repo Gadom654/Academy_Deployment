@@ -1,0 +1,107 @@
+name: Deploy to Private EKS via OpenVPN
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: false
+        type: string
+        default: "."
+        description: "Path to the Terraform code"
+      region:
+        required: false
+        type: string
+        default: "eu-north-1"
+      environment:
+        required: false
+        type: string
+        default: "DOCKER"
+        description: "GitHub Environment for Plan stage"
+      repository:
+        required: true
+        type: string
+        default: "hello-api-repo"
+        description: "ECR Repository Name"
+      cluster_name:
+        required: true
+        type: string
+        description: "Name of the EKS cluster"
+      version:
+        required: true
+        type: string
+        description: "Version of the Helm chart to deploy"
+    secrets:
+      aws_role:
+        required: true
+        description: "AWS Role ARN to assume"
+      VPN_CONFIG:
+        required: true
+        description: "OpenVPN configuration file content"
+
+permissions:
+      id-token: write 
+      contents: read 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install OpenVPN
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openvpn openvpn-systemd-resolved
+
+      - name: Connect to VPN
+        run: |
+          echo "${{ secrets.VPN_CONFIG }}" > config.ovpn
+          sudo openvpn --config config.ovpn --daemon --log vpn.log
+          
+          ITER=0
+          while ! ip route | grep -q tun0 && [ $ITER -lt 30 ]; do
+            sleep 1
+            ITER=$((ITER+1))
+          done
+          if ! ip route | grep -q tun0; then
+            echo "VPN Connection Failed"
+            cat vpn.log
+            exit 1
+          fi
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.aws_role }}
+          aws-region: ${{ inputs.region }}
+
+      - name: Update Kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ inputs.cluster_name }} --region ${{ inputs.region }}
+          kubectl get nodes
+
+      - name: Deploy Helm Chart
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          CHART_NAME: ${{ inputs.repository }}
+          CHART_VERSION: ${{ inputs.version }}
+        run: |
+          helm repo add eks https://aws.github.io/eks-charts
+          helm repo update
+          helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller \
+            -n kube-system \
+            --set clusterName=paymentapp-prod-platform-cluster \
+            --set serviceAccount.create=false \
+            --set serviceAccount.name=aws-load-balancer-controller \
+            --set vpcId=vpc-0ec808e3ef07a104d \
+            --set region=eu-north-1 \
+            --set enableShield=false \
+            --set enableWaf=false \
+            --set enableWafv2=false
+
+      - name: Disconnect VPN
+        if: always()
+        run: |
+          sudo killall openvpn || true

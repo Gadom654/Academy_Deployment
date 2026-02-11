@@ -207,24 +207,3 @@ module "lbc_role" {
 
   context = module.label.context
 }
-resource "helm_release" "lbc" {
-  name       = "aws-load-balancer-controller"
-  repository = "https://aws.github.io/eks-charts"
-  chart      = "aws-load-balancer-controller"
-  namespace  = "kube-system"
-  version    = "1.17.1"
-
-  values = [
-    yamlencode({
-      clusterName = module.eks_cluster.eks_cluster_id
-      vpcId       = data.terraform_remote_state.platform.outputs.vpc_id
-      region      = var.region
-      serviceAccount = {
-        create = false
-        name   = "aws-load-balancer-controller"
-      }
-    })
-  ]
-
-  depends_on = [module.lbc_role]
-}

@@ -34,11 +34,6 @@ output "eks_node_group_role_arn" {
   value       = module.eks_node_group_role.arn
 }
 
-output "lb_controller_role_arn" {
-  description = "ARN roli dla AWS Load Balancer Controller"
-  value       = module.eks_lb_controller_role.arn
-}
-
 output "rds_admin_role_arn" {
   description = "ARN roli administratora RDS"
   value       = module.rds_admin_role.arn
