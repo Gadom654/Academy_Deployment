@@ -19,24 +19,6 @@ resource "random_password" "db_password" {
   min_numeric      = 2
   min_special      = 2
 }
-resource "aws_security_group" "rds_access" {
-  name        = "paymentapp-rds-sg"
-  description = "Security group for RDS Postgres"
-  vpc_id      = data.terraform_remote_state.platform.outputs.vpc_id
-
-  tags = module.label.tags
-}
-
-# Rule: Allow EKS Nodes to connect
-resource "aws_security_group_rule" "allow_eks" {
-  type                     = "ingress"
-  from_port                = 5432
-  to_port                  = 5432
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.rds_access.id
-  source_security_group_id = module.eks_cluster.eks_cluster_managed_security_group_id
-  description              = "Allow EKS nodes"
-}
 module "rds" {
   source  = "cloudposse/rds/aws"
   version = "1.2.0"
@@ -51,7 +33,7 @@ module "rds" {
 
   allocated_storage = 20
 
-  security_group_ids = [aws_security_group.rds_access.id]
+  security_group_ids = [module.eks_cluster.eks_cluster_managed_security_group_id]
 
   vpc_id             = data.terraform_remote_state.platform.outputs.vpc_id
   subnet_ids         = data.terraform_remote_state.platform.outputs.database_subnet_ids
