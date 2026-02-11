@@ -1,5 +1,5 @@
 locals {
-  tags = { "kubernetes.io/cluster/${module.label.id}" = "shared" }
+  tags = { "kubernetes.io/cluster/${module.label.id}-cluster" = "shared" }
 
   public_subnets_additional_tags = {
     "kubernetes.io/role/elb" : 1
