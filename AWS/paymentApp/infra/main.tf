@@ -171,3 +171,26 @@ module "ssm_parameters" {
 
   context = module.label.context
 }
+
+data "aws_iam_policy_document" "ssm_access" {
+  statement {
+    actions   = ["ssm:GetParameter", "ssm:GetParameters"]
+    resources = ["arn:aws:ssm:*:*:parameter/paymentapp-*"]
+  }
+}
+module "eks_iam_role" {
+  source  = "cloudposse/eks-iam-role/aws"
+  version = "2.1.0"
+
+  namespace = "payment-app"
+  name      = "payment-app-sa"
+
+  eks_cluster_oidc_issuer_url = module.eks_cluster.eks_cluster_identity_oidc_issuer
+
+  service_account_name      = "payment-app-sa"
+  service_account_namespace = "payment-app"
+
+  aws_iam_policy_document = [data.aws_iam_policy_document.ssm_access.json]
+
+  context = module.this.context
+}
