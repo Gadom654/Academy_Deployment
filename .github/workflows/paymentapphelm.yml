@@ -25,7 +25,7 @@ jobs:
       environment: "AWS_APPLY"
       working_directory: "./AWS/paymentApp/helm"
       repository: "payment-chart"
-      cluster_name: "eks-prod-eks-cluster"
+      cluster_name: "paymentapp-prod-platform-cluster"
       version: "1.0.11"
     secrets:
       aws_role: ${{ secrets.AWS_APPLY_ROLE }}
