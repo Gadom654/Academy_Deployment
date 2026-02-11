@@ -126,11 +126,14 @@ module "eks_cluster" {
       resolve_conflicts_on_create = "OVERWRITE"
       resolve_conflicts_on_update = "OVERWRITE"
       service_account_role_arn    = null
-      configuration_values = jsonencode({
-        syncSecret = {
-          enabled = true
+      configuration_values        = jsonencode({
+        "secrets-store-csi-driver" = {
+          syncSecret = {
+            enabled = true
+          }
+          enableSecretRotation = true
+          rotationPollInterval = "3600s"
         }
-        enableSecretRotation = "true"
       })
     },
     {
