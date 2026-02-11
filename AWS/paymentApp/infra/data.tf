@@ -6,5 +6,3 @@ data "terraform_remote_state" "platform" {
     region = "eu-north-1"
   }
 }
-
-data "aws_caller_identity" "applyer" {}
