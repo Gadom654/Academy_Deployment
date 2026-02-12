@@ -63,9 +63,42 @@ locals {
       configuration_values = jsonencode({
         containerLogs = {
           enabled = true
+          fluentBit = {
+            resources = {
+              limits = {
+                cpu    = "500m"
+                memory = "250Mi"
+              }
+              requests = {
+                cpu    = "50m"
+                memory = "25Mi"
+              }
+            }
+          }
         }
-        metrics = {
-          enabled = true
+
+        agents = [
+          {
+            name = "cloudwatch-agent"
+            resources = {
+              limits = {
+                cpu    = "500m"
+                memory = "512Mi"
+              }
+              requests = {
+                cpu    = "250m"
+                memory = "128Mi"
+              }
+            }
+          }
+        ]
+
+        manager = {
+          applicationSignals = {
+            autoMonitor = {
+              monitorAllServices = false
+            }
+          }
         }
       })
     },
