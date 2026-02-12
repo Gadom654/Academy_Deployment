@@ -101,6 +101,12 @@ variable "eks-pod-identity-agent_version" {
   description = "Addon version for eks-pod-identity-agent"
 }
 
+variable "cloudwatch_observability_version" {
+  type        = string
+  default     = "v4.10.0-eksbuild.1"
+  description = "Addon version for amazon-cloudwatch-observability"
+}
+
 # --- EKS Node Group Variables ---
 variable "instance_type" {
   type        = string

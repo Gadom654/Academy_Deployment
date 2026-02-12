@@ -83,7 +83,7 @@ jobs:
             --set serviceAccount.create=true \
             --set serviceAccount.name=aws-load-balancer-controller \
             --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::268836235026:role/aws-load-balancer-controller \
-            --set vpcId=vpc-0ec808e3ef07a104d \
+            --set vpcId=vpc-0d1e5b76a8767ce78 \
             --set region=eu-north-1 \
             --set enableShield=false \
             --set enableWaf=false \

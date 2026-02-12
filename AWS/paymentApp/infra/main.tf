@@ -97,62 +97,7 @@ module "eks_cluster" {
   endpoint_private_access = var.endpoint_private_access
   endpoint_public_access  = var.endpoint_public_access
 
-  addons = [
-    # https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html#vpc-cni-latest-available-version
-    {
-      addon_name                  = "vpc-cni"
-      addon_version               = var.vpc_cni_version
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = var.vpc_cni_service_account_role_arn
-    },
-    # https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html
-    {
-      addon_name                  = "kube-proxy"
-      addon_version               = var.kube_proxy_version
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = null
-    },
-    # https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html
-    {
-      addon_name                  = "coredns"
-      addon_version               = var.coredns_version
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = null
-    },
-    {
-      addon_name                  = "aws-secrets-store-csi-driver-provider"
-      addon_version               = var.secret_store_version
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = null
-      configuration_values = jsonencode({
-        "secrets-store-csi-driver" = {
-          syncSecret = {
-            enabled = true
-          }
-          enableSecretRotation = true
-          rotationPollInterval = "3600s"
-        }
-      })
-    },
-    {
-      addon_name                  = "metrics-server"
-      addon_version               = var.metrics-server_version
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = null
-    },
-    {
-      addon_name                  = "eks-pod-identity-agent"
-      addon_version               = var.eks-pod-identity-agent_version
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
-      service_account_role_arn    = null
-    },
-  ]
+  addons            = local.addons
   addons_depends_on = [module.eks_node_group]
 
   context = module.label.context
