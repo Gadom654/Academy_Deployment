@@ -209,3 +209,63 @@ module "lbc_role" {
 
   context = module.label.context
 }
+
+# IAM application role module
+data "aws_iam_policy_document" "trust_relationship" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks_cluster.eks_cluster_identity_oidc_issuer, "https://", "")}:sub"
+      values   = ["system:serviceaccount:payment-app:payment-app-sa"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks_cluster.eks_cluster_identity_oidc_issuer, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    principals {
+      identifiers = ["arn:aws:iam::268836235026:oidc-provider/${replace(module.eks_cluster.eks_cluster_identity_oidc_issuer, "https://", "")}"]
+      type        = "Federated"
+    }
+  }
+}
+
+resource "aws_iam_role" "payment_app_role" {
+  name               = "payment-app-role"
+  assume_role_policy = data.aws_iam_policy_document.trust_relationship.json
+}
+
+resource "aws_iam_policy" "ssm_access" {
+  name        = "PaymentAppSSMAccess"
+  description = "Allows access to SSM parameters for payment app"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameters",
+          "ssm:GetParameter",
+          "ssm:GetParameterHistory"
+        ]
+        Resource = "arn:aws:ssm:eu-north-1:268836235026:parameter/paymentapp*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = "kms:Decrypt"
+        Resource = "arn:aws:kms:eu-north-1:268836235026:key/75b0de4b-bf8a-428b-b557-7204ea9c22dc"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_ssm" {
+  role       = aws_iam_role.payment_app_role.name
+  policy_arn = aws_iam_policy.ssm_access.arn
+}
