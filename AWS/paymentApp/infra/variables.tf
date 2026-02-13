@@ -116,7 +116,7 @@ variable "instance_type" {
 
 variable "desired_size" {
   type        = number
-  default     = 1
+  default     = 2
   description = "Desired number of nodes in the Node Group"
 }
 
@@ -128,7 +128,7 @@ variable "min_size" {
 
 variable "max_size" {
   type        = number
-  default     = 2
+  default     = 3
   description = "Maximum number of nodes in the Node Group"
 }
 
